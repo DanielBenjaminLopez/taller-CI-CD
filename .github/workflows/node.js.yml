@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: 20.x # Versión explícita
       - name: instalar dependencias
-        run: npm ci
+        run: npm install
       - name: test automatico
         run: node --test
       - name: "Hello World"
