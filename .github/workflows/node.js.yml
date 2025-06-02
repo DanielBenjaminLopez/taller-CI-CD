@@ -13,16 +13,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Debug - List files
-        run: ls -la # Verifica que package.json exista
-      - name: Salir al directorio
-        run: cd ..
-      - name: Mover al directorio
-        run: cd .\tallerCICD\
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 20.x # Versión explícita
-      - name: instalar dependencias
-        run: npm install
-      - name: test automatico
+          node-version: 20.x
+          cache: "npm"
+
+      - name: Install & Build
+        working-directory: ./tallerCICD
+        run: |
+          npm install
+          npm run build
+
+      - name: Run tests
+        working-directory: ./tallerCICD
         run: node --test
