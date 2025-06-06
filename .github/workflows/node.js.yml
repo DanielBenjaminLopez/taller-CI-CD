@@ -40,7 +40,7 @@ jobs:
         working-directory: ./tallerCICD
         run: |
           npm ci
-          npm run build  # 👈 Asegúrate de que este script genere archivos en una carpeta (ej: dist/)
+          npm run build
       - name: Desplegar en GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
