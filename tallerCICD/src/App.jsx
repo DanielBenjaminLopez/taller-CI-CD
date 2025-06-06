@@ -8,7 +8,7 @@ function App() {
 
   return (
     <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <h1>Calculadora Pro Max</h1>
+      <h1>Calculadora Pro Max 2</h1>
       <input
         type="number"
         value={a}
