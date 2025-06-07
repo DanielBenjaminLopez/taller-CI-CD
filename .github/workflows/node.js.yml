@@ -53,15 +53,7 @@ jobs:
           payload: |
             {
               "text": "*✅ Despliegue exitoso*\n• *Repositorio*: `${{ github.repository }}`\n• *URL*: <https://danielbenjaminlopez.github.io/taller-CI-CD/|Ver sitio>\n• *Commit*: `${{ github.sha }}`",        
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "*✅ Despliegue exitoso*\n• *Repositorio*: `${{ github.repository }}`\n• *URL*: <https://danielbenjaminlopez.github.io/taller-CI-CD/|Ver sitio>\n• *Commit*: `${{ github.sha }}`"
-                  }
-                }
-              ]
+             
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -73,21 +65,7 @@ jobs:
           payload: |
             {
               "text": "⚠️ Falló el despliegue\n• *Repositorio*: `${{ github.repository }}`\n• *Razón*: Revisa los logs\n• *Commit*: `${{ github.sha }}`\n• *Logs*: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|Ver detalles>",
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "*⚠️ Falló el despliegue*\n• *Repositorio*: `${{ github.repository }}`\n• *Razón*: Revisa los logs\n• *Commit*: `${{ github.sha }}`\n• *Logs*: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|Ver detalles>"
-                  }
-                }
-              ],
-              "attachments": [
-                {
-                  "color": "#ff0000",
-                  "text": "Posibles causas:\n- Error en `npm run build`\n- Problema con GitHub Pages\n- Variables de entorno faltantes"
-                }
-              ]
+              
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
