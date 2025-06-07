@@ -46,9 +46,34 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./tallerCICD/dist
-      - name: Notificar en Slack
+      - name: Notificar éxito en Slack
+        if: success()
         uses: slackapi/slack-github-action@v1
         with:
-          payload: '{"text":"✅ Despliegue exitoso","blocks":[{"type":"section","text":{"type":"mrkdwn","text":"*Repositorio*: ${{ github.repository }}\n*URL*: <https://danielbenjaminlopez.github.io/taller-CI-CD/|Ver sitio>\n*Commit*: `${{ github.sha }}`"}}]}'
+          payload: |
+            {
+              "text": "✅ Despliegue exitoso - Mensaje de respaldo",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*🚀 Despliegue exitoso*\n• *Repositorio*: `${{ github.repository }}`\n• *URL*: <https://danielbenjaminlopez.github.io/taller-CI-CD/|Ver sitio>\n• *Commit*: \`${{ github.sha.substring(0, 7) }}\`"
+                  }
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "⌚ Hora: ${{ format(utcNow(), 'yyyy-MM-dd HH:mm') }} UTC"
+                    }
+                  ]
+                }
+              ]
+            }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
