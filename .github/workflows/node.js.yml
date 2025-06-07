@@ -51,13 +51,13 @@ jobs:
         with:
           payload: |
             {
-              "text": ""✅ *Despliegue exitoso*\\n• Repositorio: ${{ github.repository }}\\n• URL: <https://danielbenjaminlopez.github.io/taller-CI-CD/|Ver sitio>"",
+              "text": "Mensaje de respaldo (se ve si fallan los bloques)",
               "blocks": [
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "✅ *Despliegue exitoso*\\n• Repositorio: ${{ github.repository }}\\n• URL: <https://danielbenjaminlopez.github.io/taller-CI-CD/|Ver sitio>"
+                    "text": "*✅ Despliegue exitoso*\\n• *Repositorio*: `${{ github.repository }}`\\n• *URL*: <https://danielbenjaminlopez.github.io/taller-CI-CD/|Ver sitio>\\n• *Commit*: \`${{ github.sha }}\`"
                   }
                 }
               ]
