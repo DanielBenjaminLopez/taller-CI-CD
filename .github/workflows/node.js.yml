@@ -102,7 +102,9 @@ jobs:
           fetch-depth: 0 # Required to access full git history for commit parsing
 
       - name: Update Taiga User Story
+        id: taiga
         uses: lauacosta/backlogr-action@v0.0.2
+        continue-on-error: true
         with:
           taiga-username: ${{ secrets.TAIGA_USERNAME }}
           taiga-password: ${{ secrets.TAIGA_PASSWORD }}
