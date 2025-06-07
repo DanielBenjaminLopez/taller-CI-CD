@@ -93,7 +93,7 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   update-taiga:
-    needs: test
+    needs: deploy
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
