@@ -46,3 +46,18 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./tallerCICD/dist
+      - name: Notificar éxito en Slack
+        if: success()
+        uses: slackapi/slack-github-action@v1
+        with:
+          slack-message: "✅ Despliegue exitoso de taller-CI-CD: https://danielbenjaminlopez.github.io/taller-CI-CD/ (Commit: ${{ github.sha }})"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Notificar fallo en Slack
+        if: failure()
+        uses: slackapi/slack-github-action@v1
+        with:
+          slack-message: "❌ Falló el despliegue o tests en taller-CI-CD. Ver logs: ${{ github.server_url }}/DanielBenjaminLopez/taller-CI-CD/actions/runs/${{ github.run_id }}"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
