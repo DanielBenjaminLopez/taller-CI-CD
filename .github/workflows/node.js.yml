@@ -58,7 +58,8 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                   }
+                    "text": " "
+                  }
                 }
               ]
             }
@@ -77,7 +78,8 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                   }
+                    "text": " "
+                  }
                 }
               ],
               "attachments": [
