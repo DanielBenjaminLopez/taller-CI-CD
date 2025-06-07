@@ -281,7 +281,7 @@ button:active {
   gap: 8px;
   grid-column: 4; /* Fija a la cuarta columna */
   /* --- SOLUCIÓN PARA EL BOTÓN ENTER INCOMPLETO --- */
-  grid-row: 2 / 6; /* Inicia en la fila 2 y se extiende hasta la línea 6 del grid (que sería la fila que contiene 0 y <) */
+  grid-row: 2 / 3; /* Inicia en la fila 2 y se extiende hasta la línea 6 del grid (que sería la fila que contiene 0 y <) */
   /* Si 6 no funciona, podemos usar 'span 5' para que abarque 5 filas desde el inicio (Clear ocupa 1, luego 4 más = 5 filas de alto) */
   /* grid-row: 2 / span 5; también podría funcionar si el recuento de filas es diferente */
   /* --- FIN DE LA SOLUCIÓN --- */
@@ -292,7 +292,7 @@ button:active {
 .btn-equals {
   background-color: var(--darker-pink);
   color: var(--dark-grey);
-  font-size: 1.5em;
+  font-size: 1em;
   box-shadow: 0 0 8px var(--darker-pink);
 }
 
