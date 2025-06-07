@@ -52,6 +52,7 @@ jobs:
         with:
           payload: |
             {
+              "text": "*✅ Despliegue exitoso*\n• *Repositorio*: `${{ github.repository }}`\n• *URL*: <https://danielbenjaminlopez.github.io/taller-CI-CD/|Ver sitio>\n• *Commit*: `${{ github.sha }}`"        
               "blocks": [
                 {
                   "type": "section",
@@ -71,7 +72,7 @@ jobs:
         with:
           payload: |
             {
-              "text": "⚠️ Falló el despliegue*\n• *Repositorio*: `${{ github.repository }}`\n• *Razón*: Revisa los logs\n• *Commit*: `${{ github.sha }}`\n• *Logs*: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|Ver detalles>",
+              "text": "⚠️ Falló el despliegue\n• *Repositorio*: `${{ github.repository }}`\n• *Razón*: Revisa los logs\n• *Commit*: `${{ github.sha }}`\n• *Logs*: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|Ver detalles>",
               "blocks": [
                 {
                   "type": "section",
