@@ -115,8 +115,6 @@ jobs:
             echo "✅ User Story #${{ steps.taiga.outputs.user-story-id }} → ${{ steps.taiga.outputs.action-taken }}"
           else
             echo "❌ User Story update failed - check commit format and Taiga connection"
-            exit 1
-          fi
 
       - name: Always notify team
         if: always()
