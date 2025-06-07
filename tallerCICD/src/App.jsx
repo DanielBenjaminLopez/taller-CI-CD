@@ -6,10 +6,11 @@ function App() {
   const [num2, setNum2] = useState("");
   const [result, setResult] = useState("0");
   const [history, setHistory] = useState([]);
-  const [currentInput, setCurrentInput] = useState(1);
+  const [currentInput, setCurrentInput] = useState(1); // 1 for num1, 2 for num2
 
   const handleNumInput = (digit) => {
     if (digit === ".") return;
+
     if (currentInput === 1) {
       setNum1((prev) => (prev === "0" ? digit : prev + digit));
     } else {
@@ -27,6 +28,7 @@ function App() {
   const calculateSum = () => {
     const n1 = parseInt(num1);
     const n2 = parseInt(num2);
+
     if (!isNaN(n1) && !isNaN(n2)) {
       const sum = n1 + n2;
       const operationString = `${n1} + ${n2} = ${sum}`;
@@ -80,34 +82,37 @@ function App() {
             </div>
           </div>
 
-          <div className="keypad-cyberpunk">
-            <button className="btn-clear glow" onClick={clearAll}>
-              CLEAR
-            </button>
-
-            {[7, 8, 9, 4, 5, 6, 1, 2, 3].map((num) => (
-              <button
-                key={num}
-                className="btn-number glow"
-                onClick={() => handleNumInput(num.toString())}
-              >
-                {num}
+          <div className="keypad-wrapper">
+            <div className="keypad-cyberpunk">
+              <button className="btn-clear glow" onClick={clearAll}>
+                CLEAR
               </button>
-            ))}
 
-            <button
-              className="btn-zero glow"
-              onClick={() => handleNumInput("0")}
-            >
-              0
-            </button>
-            <button className="btn-backspace glow" onClick={handleBackspace}>
-              {"<"}
-            </button>
+              {[7, 8, 9, 4, 5, 6, 1, 2, 3].map((num) => (
+                <button
+                  key={num}
+                  className="btn-number glow"
+                  onClick={() => handleNumInput(num.toString())}
+                >
+                  {num}
+                </button>
+              ))}
+
+              <button
+                className="btn-zero glow"
+                onClick={() => handleNumInput("0")}
+              >
+                0
+              </button>
+
+              <button className="btn-backspace glow" onClick={handleBackspace}>
+                {"<"}
+              </button>
+            </div>
 
             <div className="operator-pad-cyberpunk">
               <button
-                className="btn-operator glow btn-operator-wide"
+                className="btn-operator glow"
                 onClick={handleOperatorClick}
               >
                 +
