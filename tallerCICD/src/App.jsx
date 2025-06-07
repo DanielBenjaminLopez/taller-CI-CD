@@ -10,7 +10,6 @@ function App() {
 
   const handleNumInput = (digit) => {
     if (digit === ".") return;
-
     if (currentInput === 1) {
       setNum1((prev) => (prev === "0" ? digit : prev + digit));
     } else {
@@ -28,7 +27,6 @@ function App() {
   const calculateSum = () => {
     const n1 = parseInt(num1);
     const n2 = parseInt(num2);
-
     if (!isNaN(n1) && !isNaN(n2)) {
       const sum = n1 + n2;
       const operationString = `${n1} + ${n2} = ${sum}`;
@@ -103,7 +101,6 @@ function App() {
             >
               0
             </button>
-
             <button className="btn-backspace glow" onClick={handleBackspace}>
               {"<"}
             </button>

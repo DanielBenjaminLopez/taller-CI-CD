@@ -1,115 +1,155 @@
+body {
+  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+  color: #fff;
+  font-family: "Orbitron", sans-serif;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+}
+
 .main-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 2rem;
-  font-family: monospace;
+  padding: 20px;
 }
 
 .main-title {
-  color: #00ffff;
-  text-shadow: 0 0 5px #00ffff;
-  margin-bottom: 1rem;
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  text-shadow: 0 0 10px #00f7ff, 0 0 20px #00f7ff;
+  animation: flicker 3s infinite alternate;
+}
+
+@keyframes flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
 }
 
 .calculator-wrapper {
   display: flex;
+  gap: 20px;
   flex-wrap: wrap;
-  gap: 2rem;
+  justify-content: center;
 }
 
 .calculator-cyberpunk {
-  background-color: #111;
-  border: 2px solid #00ffff;
-  border-radius: 10px;
-  padding: 1rem;
-  width: 320px;
+  background: #1b1b2f;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px #00f7ff88;
+  max-width: 360px;
+  width: 100%;
 }
 
 .display-cyberpunk {
-  background: #000;
-  color: #0f0;
-  padding: 1rem;
-  font-size: 1.2rem;
-  border: 1px solid #0ff;
-  border-radius: 5px;
-  margin-bottom: 1rem;
+  background: #0f3460;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: right;
+  margin-bottom: 20px;
+  color: #00f7ff;
+  font-size: 1.5rem;
+  transition: background 0.3s ease;
 }
 
-.input-line,
-.result-line {
+.input-line {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 0.5rem;
+  margin-bottom: 10px;
 }
 
 .active-input {
-  text-decoration: underline;
+  color: #ff00c8;
+  font-weight: bold;
+}
+
+.result-line {
+  font-size: 1.8rem;
+  color: #f0f0f0;
+}
+
+.operator-display {
+  padding: 0 10px;
 }
 
 .keypad-cyberpunk {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 0.5rem;
-}
-
-.btn-clear {
-  grid-column: span 3;
-}
-
-.btn-zero {
-  grid-column: span 2;
+  gap: 10px;
 }
 
 .operator-pad-cyberpunk {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
   grid-column: span 3;
+  display: flex;
+  gap: 10px;
 }
 
 button {
-  background-color: #222;
-  color: #0ff;
-  border: 1px solid #0ff;
-  border-radius: 5px;
-  padding: 0.75rem;
-  font-size: 1rem;
+  background: #212121;
+  border: none;
+  color: #00f7ff;
+  padding: 15px;
+  font-size: 1.1rem;
+  border-radius: 8px;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-button.glow:hover {
-  box-shadow: 0 0 8px #0ff;
+button:hover {
+  background: #00f7ff;
+  color: #1b1b2f;
+  transform: scale(1.05);
+}
+
+.glow {
+  box-shadow: 0 0 10px #00f7ff99;
+}
+
+.btn-clear,
+.btn-clear-history,
+.btn-equals,
+.btn-operator {
+  background: #ff0055;
+  color: white;
+}
+
+.btn-clear:hover,
+.btn-clear-history:hover,
+.btn-equals:hover,
+.btn-operator:hover {
+  background: #ff66a3;
 }
 
 .history-section-cyberpunk {
   background: #111;
-  border: 2px solid #0ff;
-  padding: 1rem;
-  border-radius: 10px;
-  width: 250px;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px #00f7ff44;
+  width: 300px;
+  max-height: 450px;
+  overflow-y: auto;
 }
 
 .history-header-cyberpunk {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #0ff;
-  margin-bottom: 0.5rem;
+  margin-bottom: 10px;
 }
 
-.history-items-cyberpunk {
-  max-height: 200px;
-  overflow-y: auto;
-  color: #fff;
-  font-size: 0.9rem;
+.history-item-cyberpunk {
+  padding: 5px 0;
+  border-bottom: 1px solid #00f7ff33;
+  font-size: 1rem;
 }
 
 .history-placeholder {
   color: #888;
   font-style: italic;
-}
-
-.operator-display {
-  margin: 0 0.5rem;
 }
