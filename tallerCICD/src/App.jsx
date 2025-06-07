@@ -107,7 +107,7 @@ function App() {
 
             <div className="operator-pad-cyberpunk">
               <button
-                className="btn-operator glow"
+                className="btn-operator glow btn-operator-wide"
                 onClick={handleOperatorClick}
               >
                 +

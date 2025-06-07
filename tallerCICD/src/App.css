@@ -153,3 +153,80 @@ button:hover {
   color: #888;
   font-style: italic;
 }
+/* Contenedor principal centrado y con espacio entre calculadora e historial */
+.calculator-wrapper {
+  display: flex;
+  justify-content: center; /* Centra horizontalmente */
+  gap: 30px; /* Espacio entre calculadora e historial */
+  margin-top: 40px;
+  flex-wrap: wrap; /* Para que en pantallas pequeñas no se corte */
+}
+
+/* Ajuste del contenedor de la calculadora */
+.calculator-cyberpunk {
+  display: flex;
+  flex-direction: column;
+  width: 320px; /* Tamaño fijo para que sea consistente */
+  background: #0f0f18;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 0 8px #ff00cc, 0 0 15px #ff00cc, inset 0 0 10px #ff00cc;
+}
+
+/* Ajuste del historial para que quede a la derecha */
+.history-section-cyberpunk {
+  background: #0f0f18;
+  border-radius: 15px;
+  padding: 20px;
+  width: 250px;
+  max-height: 420px;
+  overflow-y: auto;
+  box-shadow: 0 0 8px #00ffff, 0 0 15px #00ffff, inset 0 0 10px #00ffff;
+  color: #00ffff;
+}
+
+/* Hacer el botón "+" más ancho */
+.btn-operator {
+  flex-grow: 1; /* Para que tome el espacio disponible */
+  min-width: 70px; /* Un ancho mínimo para que no quede pequeño */
+  font-size: 1.4rem;
+  padding: 12px 0;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #ff00cc, #ff66cc);
+  box-shadow: 0 0 8px #ff00cc, inset 0 0 8px #ff66cc;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.btn-operator:hover {
+  background: linear-gradient(90deg, #ff66cc, #ff00cc);
+  box-shadow: 0 0 15px #ff66cc, inset 0 0 12px #ff00cc;
+}
+
+/* Ajuste del contenedor que tiene los botones + y ENTER para que + sea más alto */
+.operator-pad-cyberpunk {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 80px; /* Para que se adapte al tamaño del botón + */
+}
+
+/* Centrar el main container */
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  background: #0a0a1a;
+  min-height: 100vh;
+  color: #fff;
+}
+
+/* Para que el teclado y botones sigan viendo bien */
+.keypad-cyberpunk {
+  display: grid;
+  grid-template-columns: repeat(3, 70px);
+  gap: 10px;
+  margin-top: 20px;
+}
