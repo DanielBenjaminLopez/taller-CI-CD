@@ -49,7 +49,19 @@ jobs:
       - name: Notificar en Slack
         uses: slackapi/slack-github-action@v1
         with:
-          # Opción 1: Mensaje simple (para probar primero)
-          slack-message: "✅ Prueba básica desde GitHub Actions"
+          # Opción 2: Payload estructurado (recomendado)
+          payload: |
+            {
+              "text": "Notificación de despliegue",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "✅ *Despliegue exitoso*\n• Repositorio: ${{ github.repository }}\n• Commit: \`${{ github.sha }}\`\n• URL: <https://danielbenjaminlopez.github.io/taller-CI-CD/|Ver sitio>"
+                  }
+                }
+              ]
+            }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
