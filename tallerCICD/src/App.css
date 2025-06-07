@@ -15,14 +15,14 @@ body {
   font-family: "Orbitron", sans-serif;
   background-color: var(--dark-grey);
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* Cambiado a columna para el título y el wrapper */
   justify-content: center;
   align-items: center;
   min-height: 100vh;
   margin: 0;
-  overflow: hidden;
+  overflow: hidden; /* Prevent scrollbars from glow effects */
   color: var(--text-color);
-  perspective: 1000px;
+  perspective: 1000px; /* For 3D effects */
 }
 
 /* Background grid animation */
@@ -64,7 +64,7 @@ body::before {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
+  gap: 20px; /* Espacio entre el título y el contenedor de la calculadora */
   padding: 20px;
 }
 
@@ -86,10 +86,11 @@ body::before {
   }
 }
 
+/* Nuevo contenedor para la calculadora y el historial */
 .calculator-wrapper {
   display: flex;
-  gap: 20px;
-  align-items: flex-start;
+  gap: 20px; /* Espacio entre la calculadora y el historial */
+  align-items: flex-start; /* Alinea la parte superior de ambos */
 }
 
 .calculator-cyberpunk {
@@ -100,12 +101,12 @@ body::before {
   overflow: hidden;
   border: 2px solid var(--neon-blue);
   animation: border-glow 2s infinite alternate;
-  transform: rotateX(5deg) rotateY(-5deg);
+  transform: rotateX(5deg) rotateY(-5deg); /* Slight 3D tilt */
   transition: transform 0.5s ease-out;
 }
 
 .calculator-cyberpunk:hover {
-  transform: rotateX(0deg) rotateY(0deg);
+  transform: rotateX(0deg) rotateY(0deg); /* Straighten on hover */
 }
 
 @keyframes border-glow {
@@ -151,7 +152,7 @@ body::before {
 .input-line {
   font-size: 0.8em;
   color: var(--neon-blue);
-  min-height: 1.2em;
+  min-height: 1.2em; /* Ensure line height */
   margin-bottom: 5px;
 }
 
@@ -186,9 +187,11 @@ body::before {
   color: var(--neon-pink);
 }
 
+/* --- SOLUCIÓN PARA LA SUPERPOSICIÓN Y DISTRIBUCIÓN --- */
 .keypad-cyberpunk {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* Mantenemos 4 columnas */
+  /* Definimos explícitamente 4 columnas: 3 para números, 1 para operadores */
+  grid-template-columns: repeat(3, 1fr) 1fr;
   gap: 8px;
   padding: 10px;
   background-color: var(--light-grey);
@@ -248,7 +251,7 @@ button:active {
   background-color: #a5a5a5;
   color: var(--dark-grey);
   font-size: 1.2em;
-  grid-column: span 3; /* Ocupa 3 columnas */
+  grid-column: 1 / span 3; /* Ocupa las primeras 3 columnas */
   box-shadow: 0 0 5px var(--neon-pink);
   z-index: 3; /* Mayor z-index para estar siempre visible */
 }
@@ -260,22 +263,32 @@ button:active {
 
 .number-pad-cyberpunk {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 1fr); /* Sus propias 3 columnas internas */
   gap: 8px;
-  grid-column: span 3; /* Ocupa 3 columnas */
+  grid-column: 1 / span 3; /* Se asegura de ocupar solo las primeras 3 columnas del keypad */
 }
 
 .number-pad-cyberpunk button {
   background-color: var(--light-grey);
 }
 
+/* Hacemos que el botón '0' no ocupe 2 columnas, sino 1, como los demás */
+.btn-zero {
+  grid-column: span 1; /* Ahora ocupa solo 1 columna */
+}
+
+/* El botón de retroceso '<' */
+.btn-backspace {
+  grid-column: span 1; /* Aseguramos que ocupe 1 columna */
+}
+
 .operator-pad-cyberpunk {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  grid-column: 4; /* Sigue en la cuarta columna */
-  grid-row: 1 / span 4; /* Mantenemos el span de 4 filas para el layout */
-  z-index: 1; /* Aseguramos que esté debajo de los botones numéricos si se superponen */
+  grid-column: 4; /* Esto lo coloca firmemente en la 4ta columna */
+  grid-row: 1 / span 5; /* Asegura que abarque todas las filas necesarias */
+  z-index: 1; /* Aseguramos que su fondo esté debajo del texto de los números si por alguna razón se superpusieran */
 }
 
 .btn-operator,
@@ -303,12 +316,6 @@ button:active {
   background-color: var(--light-grey);
   color: var(--neon-blue);
   font-size: 1.5em;
-}
-
-/* Ajustes para la distribución de 9 botones + 0 + Backspace */
-.number-pad-cyberpunk button:nth-child(10) {
-  /* Selecciona el botón '0' */
-  grid-column: span 2; /* Hace que el botón '0' ocupe 2 columnas */
 }
 
 /* History Section */
