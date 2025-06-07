@@ -1,67 +1,98 @@
-import "./App.css";
 import { useState } from "react";
-import sumar from "./suma";
+import "./App.css";
 
 function App() {
-  const [a, setA] = useState(2);
-  const [b, setB] = useState(3);
+  const [display, setDisplay] = useState("0");
+  const [firstOperand, setFirstOperand] = useState(null);
+  const [operator, setOperator] = useState(null);
+  const [history, setHistory] = useState([]);
 
-  const calculadoraStyle = {
-    backgroundColor: "#f4f4f4",
-    border: "1px solid #ddd",
-    borderRadius: "8px",
-    padding: "30px",
-    maxWidth: "300px",
-    margin: "50px auto",
-    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-    textAlign: "center",
+  const inputDigit = (digit) => {
+    if (display === "0") {
+      setDisplay(digit);
+    } else {
+      setDisplay(display + digit);
+    }
   };
 
-  const tituloStyle = {
-    color: "#333",
-    marginBottom: "20px",
+  const inputOperator = (op) => {
+    setFirstOperand(parseFloat(display));
+    setOperator(op);
+    setDisplay("0");
   };
 
-  const inputStyle = {
-    padding: "10px",
-    margin: "0 5px",
-    borderRadius: "4px",
-    border: "1px solid #ccc",
-    fontSize: "16px",
-    width: "80px",
-    textAlign: "center",
+  const calculate = () => {
+    const secondOperand = parseFloat(display);
+    let result;
+
+    switch (operator) {
+      case "+":
+        result = firstOperand + secondOperand;
+        break;
+      default:
+        return;
+    }
+
+    const operationString = `${firstOperand} ${operator} ${secondOperand} = ${result}`;
+    setHistory([...history, operationString]);
+
+    setDisplay(result.toString());
+    setFirstOperand(null);
+    setOperator(null);
   };
 
-  const signoStyle = {
-    fontSize: "20px",
-    margin: "0 10px",
-    color: "#555",
+  const clearAll = () => {
+    setDisplay("0");
+    setFirstOperand(null);
+    setOperator(null);
   };
 
-  const resultadoStyle = {
-    marginTop: "25px",
-    fontSize: "18px",
-    fontWeight: "bold",
-    color: "#28a745" /* Verde para indicar el resultado */,
+  const clearHistory = () => {
+    setHistory([]);
   };
 
   return (
-    <div style={calculadoraStyle}>
-      <h1 style={tituloStyle}>Calculadora Pro Max 2</h1>
-      <input
-        type="number"
-        style={inputStyle}
-        value={a}
-        onChange={(e) => setA(Number(e.target.value))}
-      />
-      <span style={signoStyle}> + </span>
-      <input
-        type="number"
-        style={inputStyle}
-        value={b}
-        onChange={(e) => setB(Number(e.target.value))}
-      />
-      <p style={resultadoStyle}>Resultado: {sumar(a, b)}</p>
+    <div className="calculator">
+      <div className="display">{display}</div>
+
+      <div className="keypad">
+        <button className="btn-clear" onClick={clearAll}>
+          AC
+        </button>
+
+        <div className="number-pad">
+          {[7, 8, 9, 4, 5, 6, 1, 2, 3, 0].map((num) => (
+            <button key={num} onClick={() => inputDigit(num.toString())}>
+              {num}
+            </button>
+          ))}
+        </div>
+
+        <div className="operator-pad">
+          <button className="btn-operator" onClick={() => inputOperator("+")}>
+            +
+          </button>
+          <button className="btn-equals" onClick={calculate}>
+            =
+          </button>
+        </div>
+      </div>
+
+      <div className="history-section">
+        <div className="history-header">
+          <h3>Historial</h3>
+          <button className="btn-clear-history" onClick={clearHistory}>
+            Limpiar
+          </button>
+        </div>
+        <div className="history-items">
+          {history.map((item, index) => (
+            <div key={index} className="history-item">
+              {item}
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
