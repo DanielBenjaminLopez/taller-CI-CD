@@ -52,11 +52,8 @@ body::before {
 }
 
 @keyframes grid-pulse {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 50px 50px;
+  50% {
+    opacity: 0;
   }
 }
 
@@ -186,64 +183,15 @@ body::before {
   color: var(--neon-pink);
 }
 
-/* --- INICIO DE LAS INSTRUCCIONES ESPECÍFICAS --- */
-
 .keypad-cyberpunk {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 4 columnas iguales */
+  grid-template-columns: repeat(4, 1fr);
   gap: 8px;
   padding: 10px;
   background-color: var(--light-grey);
 }
 
-/* Eliminamos la regla .number-pad-cyberpunk por completo */
-/* Los botones numéricos ahora son hijos directos de .keypad-cyberpunk */
-
-.btn-clear {
-  background-color: #a5a5a5;
-  color: var(--dark-grey);
-  font-size: 1.2em;
-  grid-column: 1 / span 4; /* Ahora ocupa las 4 columnas */
-  box-shadow: 0 0 5px var(--neon-pink);
-  /* z-index para asegurar que esté por encima de todo */
-  z-index: 3;
-}
-
-/* Estilos para botones numéricos (todos los del 1-9) */
-.btn-number {
-  background-color: var(--light-grey);
-  grid-column: auto; /* Se posicionará automáticamente en el grid */
-  /*z-index para asegurar que estén por encima del operator-pad si se superponen*/
-  z-index: 2;
-}
-
-.btn-zero {
-  grid-column: 1; /* Ahora ocupa solo la primera columna de su fila */
-  background-color: var(--light-grey); /* Aseguramos el color */
-  z-index: 2;
-}
-
-.btn-backspace {
-  grid-column: 2; /* Segunda columna de su fila */
-  background-color: var(--light-grey); /* Aseguramos el color */
-  color: var(--neon-blue); /* Mantenemos el color del texto */
-  z-index: 2;
-}
-
-.operator-pad-cyberpunk {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  grid-column: 4; /* Fija a la cuarta columna */
-  grid-row: 2 / span 4; /* Desde la fila 2 hasta la 4 (esto cubrirá las filas de números 7-9, 4-6, 1-3 y 0-<) */
-  /* z-index bajo para que los botones numéricos se superpongan si es necesario */
-  z-index: 1;
-}
-
-/* --- FIN DE LAS INSTRUCCIONES ESPECÍFICAS --- */
-
 button {
-  /* Esta regla general se mantiene, pero las específicas la anulan */
   height: 70px;
   font-size: 1.6em;
   border: none;
@@ -257,7 +205,7 @@ button {
   position: relative;
   overflow: hidden;
   /* z-index por defecto para botones, si no hay uno más específico */
-  z-index: 2;
+  z-index: 2; /* Generalmente encima de fondos, pero debajo de los que tengan z-index más alto */
 }
 
 button::before {
@@ -272,7 +220,7 @@ button::before {
     rgba(0, 255, 255, 0.3) 0%,
     rgba(255, 0, 255, 0.3) 100%
   );
-  z-index: 1;
+  z-index: 1; /* El pseudo-elemento siempre detrás del texto del botón */
   opacity: 0;
   transition: opacity 0.3s ease-in-out;
 }
@@ -292,6 +240,52 @@ button:active {
 
 .glow:hover {
   box-shadow: 0 0 15px var(--neon-blue), 0 0 25px var(--neon-pink);
+}
+
+.btn-clear {
+  background-color: #a5a5a5;
+  color: var(--dark-grey);
+  font-size: 1.2em;
+  grid-column: 1 / span 4;
+  box-shadow: 0 0 5px var(--neon-pink);
+  z-index: 3; /* El más alto, siempre visible */
+}
+
+.btn-clear:hover {
+  background-color: #bfbfbf;
+  box-shadow: 0 0 15px var(--neon-pink), 0 0 25px var(--neon-blue);
+}
+
+.btn-number {
+  background-color: var(--light-grey);
+  grid-column: auto;
+  z-index: 2; /* Para que estén por encima de operator-pad */
+}
+
+.btn-zero {
+  grid-column: 1;
+  background-color: var(--light-grey);
+  z-index: 2; /* Para que esté por encima de operator-pad */
+}
+
+.btn-backspace {
+  grid-column: 2;
+  background-color: var(--light-grey);
+  color: var(--neon-blue);
+  z-index: 2; /* Para que esté por encima de operator-pad */
+}
+
+.operator-pad-cyberpunk {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  grid-column: 4; /* Fija a la cuarta columna */
+  /* --- SOLUCIÓN PARA EL BOTÓN ENTER INCOMPLETO --- */
+  grid-row: 2 / 6; /* Inicia en la fila 2 y se extiende hasta la línea 6 del grid (que sería la fila que contiene 0 y <) */
+  /* Si 6 no funciona, podemos usar 'span 5' para que abarque 5 filas desde el inicio (Clear ocupa 1, luego 4 más = 5 filas de alto) */
+  /* grid-row: 2 / span 5; también podría funcionar si el recuento de filas es diferente */
+  /* --- FIN DE LA SOLUCIÓN --- */
+  z-index: 1; /* Fondo, debajo de los números */
 }
 
 .btn-operator,
