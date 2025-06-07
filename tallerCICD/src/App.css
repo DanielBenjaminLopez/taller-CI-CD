@@ -1,408 +1,115 @@
-@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Press+Start+2P&display=swap");
-
-:root {
-  --neon-blue: #00e6e6;
-  --neon-pink: #ff00ff;
-  --neon-green: #00ff00;
-  --darker-pink: #cc00cc; /* Nuevo color fucsia más oscuro */
-  --dark-grey: #1a1a1a;
-  --medium-grey: #333333;
-  --light-grey: #555555;
-  --text-color: #e0e0e0;
-}
-
-body {
-  font-family: "Orbitron", sans-serif;
-  background-color: var(--dark-grey);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  margin: 0;
-  overflow: hidden;
-  color: var(--text-color);
-  perspective: 1000px;
-}
-
-/* Background grid animation */
-body::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-      to right,
-      transparent 1px,
-      rgba(0, 255, 255, 0.05) 1px,
-      transparent 2px
-    ),
-    linear-gradient(
-      to bottom,
-      transparent 1px,
-      rgba(0, 255, 255, 0.05) 1px,
-      transparent 2px
-    );
-  background-size: 50px 50px;
-  animation: grid-pulse 10s infinite alternate;
-  z-index: -1;
-  opacity: 0.3;
-}
-
-@keyframes grid-pulse {
-  50% {
-    opacity: 0;
-  }
-}
-
 .main-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
-  padding: 20px;
+  padding: 2rem;
+  font-family: monospace;
 }
 
 .main-title {
-  font-family: "Press Start 2P", cursive;
-  font-size: 2.5em;
-  color: var(--neon-green);
-  text-shadow: 0 0 15px var(--neon-green), 0 0 30px var(--neon-blue);
-  animation: title-glow 3s infinite alternate;
-  margin-bottom: 0;
-}
-
-@keyframes title-glow {
-  from {
-    text-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-blue);
-  }
-  to {
-    text-shadow: 0 0 15px var(--neon-pink), 0 0 30px var(--neon-blue);
-  }
+  color: #00ffff;
+  text-shadow: 0 0 5px #00ffff;
+  margin-bottom: 1rem;
 }
 
 .calculator-wrapper {
   display: flex;
-  gap: 20px;
-  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 2rem;
 }
 
 .calculator-cyberpunk {
-  width: 360px;
-  background-color: var(--medium-grey);
-  border-radius: 15px;
-  box-shadow: 0 0 30px rgba(0, 255, 255, 0.5), 0 0 60px rgba(255, 0, 255, 0.3);
-  overflow: hidden;
-  border: 2px solid var(--neon-blue);
-  animation: border-glow 2s infinite alternate;
-  transform: rotateX(5deg) rotateY(-5deg);
-  transition: transform 0.5s ease-out;
-}
-
-.calculator-cyberpunk:hover {
-  transform: rotateX(0deg) rotateY(0deg);
-}
-
-@keyframes border-glow {
-  from {
-    border-color: var(--neon-blue);
-    box-shadow: 0 0 20px var(--neon-blue), 0 0 40px var(--neon-pink);
-  }
-  to {
-    border-color: var(--neon-pink);
-    box-shadow: 0 0 30px var(--neon-pink), 0 0 50px var(--neon-blue);
-  }
+  background-color: #111;
+  border: 2px solid #00ffff;
+  border-radius: 10px;
+  padding: 1rem;
+  width: 320px;
 }
 
 .display-cyberpunk {
-  background-color: #0d0d0d;
-  color: var(--neon-green);
-  font-family: "Press Start 2P", cursive;
-  font-size: 1.6em;
-  padding: 25px 20px;
-  text-align: right;
-  border-bottom: 2px solid var(--neon-blue);
-  overflow-x: auto;
-  white-space: nowrap;
-  letter-spacing: 1px;
-  text-shadow: 0 0 8px var(--neon-green);
-  position: relative;
+  background: #000;
+  color: #0f0;
+  padding: 1rem;
+  font-size: 1.2rem;
+  border: 1px solid #0ff;
+  border-radius: 5px;
+  margin-bottom: 1rem;
 }
 
-.display-cyberpunk::after {
-  content: "|";
-  display: inline-block;
-  animation: blink-caret 1s infinite steps(1);
-  margin-left: 5px;
-  color: var(--neon-blue);
-}
-
-@keyframes blink-caret {
-  50% {
-    opacity: 0;
-  }
-}
-
-.input-line {
-  font-size: 0.8em;
-  color: var(--neon-blue);
-  min-height: 1.2em;
-  margin-bottom: 5px;
-}
-
-.input-line span {
-  display: inline-block;
-  vertical-align: middle;
-  padding: 2px;
-  border-bottom: 1px dashed transparent;
-  transition: border-bottom 0.3s ease-in-out;
-}
-
-.input-line .active-input {
-  border-bottom: 1px dashed var(--neon-pink);
-  animation: caret-blink 0.8s infinite steps(1);
-}
-
-.operator-display {
-  margin: 0 10px;
-  color: var(--neon-pink);
-  font-size: 1.2em;
-}
-
+.input-line,
 .result-line {
-  font-size: 1.3em;
-  color: var(--neon-green);
-  text-shadow: 0 0 10px var(--neon-green);
-  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
 }
 
-.equals-sign {
-  margin-right: 10px;
-  color: var(--neon-pink);
+.active-input {
+  text-decoration: underline;
 }
 
 .keypad-cyberpunk {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  padding: 10px;
-  background-color: var(--light-grey);
-}
-
-button {
-  height: 70px;
-  font-size: 1.6em;
-  border: none;
-  background-color: var(--medium-grey);
-  color: var(--text-color);
-  cursor: pointer;
-  transition: background-color 0.2s ease-in-out, transform 0.1s ease-out,
-    box-shadow 0.2s ease-in-out;
-  border-radius: 8px;
-  font-family: "Orbitron", sans-serif;
-  position: relative;
-  overflow: hidden;
-  /* z-index por defecto para botones, si no hay uno más específico */
-  z-index: 2; /* Generalmente encima de fondos, pero debajo de los que tengan z-index más alto */
-}
-
-button::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    45deg,
-    rgba(0, 255, 255, 0.3) 0%,
-    rgba(255, 0, 255, 0.3) 100%
-  );
-  z-index: 1; /* El pseudo-elemento siempre detrás del texto del botón */
-  opacity: 0;
-  transition: opacity 0.3s ease-in-out;
-}
-
-button:hover::before {
-  opacity: 1;
-}
-
-button:active {
-  transform: scale(0.95);
-  box-shadow: 0 0 15px var(--neon-blue);
-}
-
-.glow {
-  box-shadow: 0 0 5px var(--neon-blue);
-}
-
-.glow:hover {
-  box-shadow: 0 0 15px var(--neon-blue), 0 0 25px var(--neon-pink);
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
 }
 
 .btn-clear {
-  background-color: #a5a5a5;
-  color: var(--dark-grey);
-  font-size: 1.2em;
-  grid-column: 1 / span 4;
-  box-shadow: 0 0 5px var(--neon-pink);
-  z-index: 3; /* El más alto, siempre visible */
-}
-
-.btn-clear:hover {
-  background-color: #bfbfbf;
-  box-shadow: 0 0 15px var(--neon-pink), 0 0 25px var(--neon-blue);
-}
-
-.btn-number {
-  background-color: var(--light-grey);
-  grid-column: auto;
-  z-index: 2; /* Para que estén por encima de operator-pad */
+  grid-column: span 3;
 }
 
 .btn-zero {
-  grid-column: 1;
-  background-color: var(--light-grey);
-  z-index: 2; /* Para que esté por encima de operator-pad */
-}
-
-.btn-backspace {
-  grid-column: 2;
-  background-color: var(--light-grey);
-  color: var(--neon-blue);
-  z-index: 2; /* Para que esté por encima de operator-pad */
+  grid-column: span 2;
 }
 
 .operator-pad-cyberpunk {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  grid-column: 4; /* Fija a la cuarta columna */
-  /* --- SOLUCIÓN PARA EL BOTÓN ENTER INCOMPLETO --- */
-  grid-row: 2 / 6; /* Inicia en la fila 2 y se extiende hasta la línea 6 del grid (que sería la fila que contiene 0 y <) */
-  /* Si 6 no funciona, podemos usar 'span 5' para que abarque 5 filas desde el inicio (Clear ocupa 1, luego 4 más = 5 filas de alto) */
-  /* grid-row: 2 / span 5; también podría funcionar si el recuento de filas es diferente */
-  /* --- FIN DE LA SOLUCIÓN --- */
-  z-index: 1; /* Fondo, debajo de los números */
+  gap: 0.5rem;
+  grid-column: span 3;
 }
 
-.btn-operator,
-.btn-equals {
-  background-color: var(--darker-pink);
-  color: var(--dark-grey);
-  font-size: 1.5em;
-  box-shadow: 0 0 8px var(--darker-pink);
+button {
+  background-color: #222;
+  color: #0ff;
+  border: 1px solid #0ff;
+  border-radius: 5px;
+  padding: 0.75rem;
+  font-size: 1rem;
+  cursor: pointer;
 }
 
-.btn-operator:hover,
-.btn-equals:hover {
-  background-color: var(--neon-blue);
-  box-shadow: 0 0 15px var(--neon-blue), 0 0 25px var(--darker-pink);
+button.glow:hover {
+  box-shadow: 0 0 8px #0ff;
 }
 
-.btn-equals {
-  flex-grow: 1;
-  font-size: 1.8em;
-}
-
-/* History Section */
 .history-section-cyberpunk {
-  flex-shrink: 0;
+  background: #111;
+  border: 2px solid #0ff;
+  padding: 1rem;
+  border-radius: 10px;
   width: 250px;
-  background-color: var(--dark-grey);
-  color: var(--neon-blue);
-  padding: 15px;
-  max-height: 450px;
-  overflow-y: auto;
-  border: 2px solid var(--neon-pink);
-  border-radius: 15px;
-  box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.2),
-    0 0 20px rgba(255, 0, 255, 0.3);
-}
-
-.history-section-cyberpunk::-webkit-scrollbar {
-  width: 8px;
-}
-
-.history-section-cyberpunk::-webkit-scrollbar-track {
-  background: var(--medium-grey);
-  border-radius: 10px;
-}
-
-.history-section-cyberpunk::-webkit-scrollbar-thumb {
-  background: var(--neon-blue);
-  border-radius: 10px;
-  box-shadow: 0 0 5px var(--neon-blue);
 }
 
 .history-header-cyberpunk {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
-  border-bottom: 1px dashed var(--light-grey);
-  padding-bottom: 8px;
-}
-
-.history-header-cyberpunk h3 {
-  margin: 0;
-  color: var(--neon-pink);
-  text-shadow: 0 0 5px var(--neon-pink);
-  font-family: "Press Start 2P", cursive;
-  font-size: 1em;
+  color: #0ff;
+  margin-bottom: 0.5rem;
 }
 
 .history-items-cyberpunk {
-  display: flex;
-  flex-direction: column-reverse;
-}
-
-.history-item-cyberpunk {
-  padding: 8px 0;
-  border-bottom: 1px dashed rgba(0, 255, 255, 0.2);
-  font-size: 0.9em;
-  color: var(--text-color);
-  transition: color 0.3s ease-in-out;
-}
-
-.history-item-cyberpunk:first-child {
-  border-bottom: none;
-}
-
-.history-item-cyberpunk:last-child {
-  border-bottom: 1px dashed rgba(0, 255, 255, 0.2);
-}
-
-.history-item-cyberpunk:hover {
-  color: var(--neon-green);
-  text-shadow: 0 0 5px var(--neon-green);
-}
-
-.btn-clear-history {
-  background-color: transparent;
-  border: 1px solid var(--neon-blue);
-  padding: 8px 12px;
-  font-size: 0.8em;
-  width: auto;
-  height: auto;
-  color: var(--neon-blue);
-  transition: all 0.3s ease-in-out;
-  box-shadow: 0 0 5px var(--neon-blue);
-}
-
-.btn-clear-history:hover {
-  background-color: var(--neon-blue);
-  color: var(--dark-grey);
-  box-shadow: 0 0 15px var(--neon-blue);
+  max-height: 200px;
+  overflow-y: auto;
+  color: #fff;
+  font-size: 0.9rem;
 }
 
 .history-placeholder {
-  color: var(--light-grey);
-  text-align: center;
-  padding: 20px;
-  font-family: "Press Start 2P", cursive;
-  font-size: 0.7em;
-  opacity: 0.7;
+  color: #888;
+  font-style: italic;
+}
+
+.operator-display {
+  margin: 0 0.5rem;
 }

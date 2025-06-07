@@ -6,10 +6,9 @@ function App() {
   const [num2, setNum2] = useState("");
   const [result, setResult] = useState("0");
   const [history, setHistory] = useState([]);
-  const [currentInput, setCurrentInput] = useState(1); // 1 for num1, 2 for num2
+  const [currentInput, setCurrentInput] = useState(1);
 
   const handleNumInput = (digit) => {
-    // Solo permitir dígitos, ignorar el punto para números enteros
     if (digit === ".") return;
 
     if (currentInput === 1) {
@@ -17,29 +16,27 @@ function App() {
     } else {
       setNum2((prev) => (prev === "0" ? digit : prev + digit));
     }
-    setResult("0"); // Clear result when new input starts
+    setResult("0");
   };
 
   const handleOperatorClick = () => {
     if (currentInput === 1 && num1 !== "") {
-      setCurrentInput(2); // Move to inputting the second number
+      setCurrentInput(2);
     }
   };
 
   const calculateSum = () => {
-    // Usar parseInt para asegurar que sean números enteros
     const n1 = parseInt(num1);
     const n2 = parseInt(num2);
 
     if (!isNaN(n1) && !isNaN(n2)) {
-      // De acuerdo a tu solicitud de precisión, la suma de enteros es directa.
       const sum = n1 + n2;
       const operationString = `${n1} + ${n2} = ${sum}`;
-      setHistory((prevHistory) => [operationString, ...prevHistory]); // Add to top of history
+      setHistory((prevHistory) => [operationString, ...prevHistory]);
       setResult(sum.toString());
       setNum1("");
       setNum2("");
-      setCurrentInput(1); // Reset for next calculation
+      setCurrentInput(1);
     } else {
       setResult("Error");
     }
@@ -90,11 +87,10 @@ function App() {
               CLEAR
             </button>
 
-            {/* Botones numéricos reorganizados directamente en keypad-cyberpunk */}
             {[7, 8, 9, 4, 5, 6, 1, 2, 3].map((num) => (
               <button
                 key={num}
-                className="btn-number glow" // Clase genérica para números
+                className="btn-number glow"
                 onClick={() => handleNumInput(num.toString())}
               >
                 {num}
