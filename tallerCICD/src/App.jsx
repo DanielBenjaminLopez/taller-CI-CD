@@ -90,31 +90,27 @@ function App() {
               CLEAR
             </button>
 
-            <div className="number-pad-cyberpunk">
-              {[7, 8, 9, 4, 5, 6, 1, 2, 3].map(
-                (
-                  num // Eliminado el 0 y el punto
-                ) => (
-                  <button
-                    key={num}
-                    className="glow"
-                    onClick={() => handleNumInput(num.toString())}
-                  >
-                    {num}
-                  </button>
-                )
-              )}
+            {/* Botones numéricos reorganizados directamente en keypad-cyberpunk */}
+            {[7, 8, 9, 4, 5, 6, 1, 2, 3].map((num) => (
               <button
-                className="btn-zero glow"
-                onClick={() => handleNumInput("0")}
+                key={num}
+                className="btn-number glow" // Clase genérica para números
+                onClick={() => handleNumInput(num.toString())}
               >
-                0
-              </button>{" "}
-              {/* Botón 0 separado para el layout */}
-              <button className="btn-backspace glow" onClick={handleBackspace}>
-                {"<"}
+                {num}
               </button>
-            </div>
+            ))}
+
+            <button
+              className="btn-zero glow"
+              onClick={() => handleNumInput("0")}
+            >
+              0
+            </button>
+
+            <button className="btn-backspace glow" onClick={handleBackspace}>
+              {"<"}
+            </button>
 
             <div className="operator-pad-cyberpunk">
               <button

@@ -15,14 +15,14 @@ body {
   font-family: "Orbitron", sans-serif;
   background-color: var(--dark-grey);
   display: flex;
-  flex-direction: column; /* Cambiado a columna para el título y el wrapper */
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
   margin: 0;
-  overflow: hidden; /* Prevent scrollbars from glow effects */
+  overflow: hidden;
   color: var(--text-color);
-  perspective: 1000px; /* For 3D effects */
+  perspective: 1000px;
 }
 
 /* Background grid animation */
@@ -64,7 +64,7 @@ body::before {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px; /* Espacio entre el título y el contenedor de la calculadora */
+  gap: 20px;
   padding: 20px;
 }
 
@@ -86,11 +86,10 @@ body::before {
   }
 }
 
-/* Nuevo contenedor para la calculadora y el historial */
 .calculator-wrapper {
   display: flex;
-  gap: 20px; /* Espacio entre la calculadora y el historial */
-  align-items: flex-start; /* Alinea la parte superior de ambos */
+  gap: 20px;
+  align-items: flex-start;
 }
 
 .calculator-cyberpunk {
@@ -101,12 +100,12 @@ body::before {
   overflow: hidden;
   border: 2px solid var(--neon-blue);
   animation: border-glow 2s infinite alternate;
-  transform: rotateX(5deg) rotateY(-5deg); /* Slight 3D tilt */
+  transform: rotateX(5deg) rotateY(-5deg);
   transition: transform 0.5s ease-out;
 }
 
 .calculator-cyberpunk:hover {
-  transform: rotateX(0deg) rotateY(0deg); /* Straighten on hover */
+  transform: rotateX(0deg) rotateY(0deg);
 }
 
 @keyframes border-glow {
@@ -152,7 +151,7 @@ body::before {
 .input-line {
   font-size: 0.8em;
   color: var(--neon-blue);
-  min-height: 1.2em; /* Ensure line height */
+  min-height: 1.2em;
   margin-bottom: 5px;
 }
 
@@ -187,17 +186,64 @@ body::before {
   color: var(--neon-pink);
 }
 
-/* --- SOLUCIÓN PARA LA SUPERPOSICIÓN Y DISTRIBUCIÓN --- */
+/* --- INICIO DE LAS INSTRUCCIONES ESPECÍFICAS --- */
+
 .keypad-cyberpunk {
   display: grid;
-  /* Definimos explícitamente 4 columnas: 3 para números, 1 para operadores */
-  grid-template-columns: repeat(3, 1fr) 1fr;
+  grid-template-columns: repeat(4, 1fr); /* 4 columnas iguales */
   gap: 8px;
   padding: 10px;
   background-color: var(--light-grey);
 }
 
+/* Eliminamos la regla .number-pad-cyberpunk por completo */
+/* Los botones numéricos ahora son hijos directos de .keypad-cyberpunk */
+
+.btn-clear {
+  background-color: #a5a5a5;
+  color: var(--dark-grey);
+  font-size: 1.2em;
+  grid-column: 1 / span 4; /* Ahora ocupa las 4 columnas */
+  box-shadow: 0 0 5px var(--neon-pink);
+  /* z-index para asegurar que esté por encima de todo */
+  z-index: 3;
+}
+
+/* Estilos para botones numéricos (todos los del 1-9) */
+.btn-number {
+  background-color: var(--light-grey);
+  grid-column: auto; /* Se posicionará automáticamente en el grid */
+  /*z-index para asegurar que estén por encima del operator-pad si se superponen*/
+  z-index: 2;
+}
+
+.btn-zero {
+  grid-column: 1; /* Ahora ocupa solo la primera columna de su fila */
+  background-color: var(--light-grey); /* Aseguramos el color */
+  z-index: 2;
+}
+
+.btn-backspace {
+  grid-column: 2; /* Segunda columna de su fila */
+  background-color: var(--light-grey); /* Aseguramos el color */
+  color: var(--neon-blue); /* Mantenemos el color del texto */
+  z-index: 2;
+}
+
+.operator-pad-cyberpunk {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  grid-column: 4; /* Fija a la cuarta columna */
+  grid-row: 2 / span 4; /* Desde la fila 2 hasta la 4 (esto cubrirá las filas de números 7-9, 4-6, 1-3 y 0-<) */
+  /* z-index bajo para que los botones numéricos se superpongan si es necesario */
+  z-index: 1;
+}
+
+/* --- FIN DE LAS INSTRUCCIONES ESPECÍFICAS --- */
+
 button {
+  /* Esta regla general se mantiene, pero las específicas la anulan */
   height: 70px;
   font-size: 1.6em;
   border: none;
@@ -210,7 +256,8 @@ button {
   font-family: "Orbitron", sans-serif;
   position: relative;
   overflow: hidden;
-  z-index: 2; /* Aseguramos que los botones estén por encima del fondo del keypad */
+  /* z-index por defecto para botones, si no hay uno más específico */
+  z-index: 2;
 }
 
 button::before {
@@ -225,7 +272,7 @@ button::before {
     rgba(0, 255, 255, 0.3) 0%,
     rgba(255, 0, 255, 0.3) 100%
   );
-  z-index: 1; /* Aseguramos que el pseudo-elemento esté por debajo del texto/contenido del botón */
+  z-index: 1;
   opacity: 0;
   transition: opacity 0.3s ease-in-out;
 }
@@ -247,55 +294,9 @@ button:active {
   box-shadow: 0 0 15px var(--neon-blue), 0 0 25px var(--neon-pink);
 }
 
-.btn-clear {
-  background-color: #a5a5a5;
-  color: var(--dark-grey);
-  font-size: 1.2em;
-  grid-column: 1 / span 3; /* Ocupa las primeras 3 columnas */
-  box-shadow: 0 0 5px var(--neon-pink);
-  z-index: 3; /* Mayor z-index para estar siempre visible */
-}
-
-.btn-clear:hover {
-  background-color: #bfbfbf;
-  box-shadow: 0 0 15px var(--neon-pink), 0 0 25px var(--neon-blue);
-}
-
-.number-pad-cyberpunk {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Sus propias 3 columnas internas */
-  gap: 8px;
-  grid-column: 1 / span 3; /* Se asegura de ocupar solo las primeras 3 columnas del keypad */
-}
-
-.number-pad-cyberpunk button {
-  background-color: var(--light-grey);
-}
-
-/* Hacemos que el botón '0' no ocupe 2 columnas, sino 1, como los demás */
-.btn-zero {
-  grid-column: span 1; /* Ahora ocupa solo 1 columna */
-}
-
-/* El botón de retroceso '<' */
-.btn-backspace {
-  grid-column: span 1; /* Aseguramos que ocupe 1 columna */
-}
-
-.operator-pad-cyberpunk {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  grid-column: 4; /* Esto lo coloca firmemente en la 4ta columna */
-  grid-row: 1 / span 5; /* Asegura que abarque todas las filas necesarias */
-  z-index: 1; /* Aseguramos que su fondo esté debajo del texto de los números si por alguna razón se superpusieran */
-}
-
 .btn-operator,
 .btn-equals {
-  background-color: var(
-    --darker-pink
-  ); /* Usamos el nuevo color fucsia más oscuro */
+  background-color: var(--darker-pink);
   color: var(--dark-grey);
   font-size: 1.5em;
   box-shadow: 0 0 8px var(--darker-pink);
@@ -310,12 +311,6 @@ button:active {
 .btn-equals {
   flex-grow: 1;
   font-size: 1.8em;
-}
-
-.btn-backspace {
-  background-color: var(--light-grey);
-  color: var(--neon-blue);
-  font-size: 1.5em;
 }
 
 /* History Section */
