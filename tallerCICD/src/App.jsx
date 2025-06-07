@@ -64,7 +64,9 @@ function App() {
 
   return (
     <div className="main-container">
-      <h1 className="main-title glow-title">Taller de CI/CD</h1>
+      <h1 className="main-title glow-title">
+        Taller de CI/CD - sumador de dos números naturales
+      </h1>
       <div className="calculator-wrapper">
         <div className="calculator-cyberpunk">
           <div className="display-cyberpunk">
