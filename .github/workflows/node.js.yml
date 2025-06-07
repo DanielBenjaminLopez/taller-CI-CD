@@ -50,7 +50,7 @@ jobs:
         if: success()
         uses: slackapi/slack-github-action@v1
         with:
-          slack-message: "✅ Despliegue exitoso de taller-CI-CD: https://danielbenjaminlopez.github.io/taller-CI-CD/ (Commit: ${{ github.sha }})"
+          slack-message: "✅ Despliegue exitoso de taller-CI-CD: https://danielbenjaminlopez.github.io/taller-CI-CD/"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
@@ -58,6 +58,6 @@ jobs:
         if: failure()
         uses: slackapi/slack-github-action@v1
         with:
-          slack-message: "❌ Falló el despliegue o tests en taller-CI-CD. Ver logs: ${{ github.server_url }}/DanielBenjaminLopez/taller-CI-CD/actions/runs/${{ github.run_id }}"
+          slack-message: "❌ Falló el despliegue o tests en taller-CI-CD."
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
