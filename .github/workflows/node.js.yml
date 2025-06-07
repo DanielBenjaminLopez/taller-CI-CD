@@ -46,18 +46,10 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./tallerCICD/dist
-      - name: Notificar éxito en Slack
-        if: success()
+      - name: Notificar en Slack
         uses: slackapi/slack-github-action@v1
         with:
-          slack-message: "✅ Despliegue exitoso de taller-CI-CD: https://danielbenjaminlopez.github.io/taller-CI-CD/"
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-
-      - name: Notificar fallo en Slack
-        if: failure()
-        uses: slackapi/slack-github-action@v1
-        with:
-          slack-message: "❌ Falló el despliegue o tests en taller-CI-CD."
+          # Opción 1: Mensaje simple (para probar primero)
+          slack-message: "✅ Prueba básica desde GitHub Actions"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
