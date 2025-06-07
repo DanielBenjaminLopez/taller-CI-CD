@@ -4,6 +4,7 @@
   --neon-blue: #00e6e6;
   --neon-pink: #ff00ff;
   --neon-green: #00ff00;
+  --darker-pink: #cc00cc; /* Nuevo color fucsia más oscuro */
   --dark-grey: #1a1a1a;
   --medium-grey: #333333;
   --light-grey: #555555;
@@ -14,7 +15,7 @@ body {
   font-family: "Orbitron", sans-serif;
   background-color: var(--dark-grey);
   display: flex;
-  flex-direction: column; /* Cambiado a columna para el título y el wrapper */
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
@@ -63,7 +64,7 @@ body::before {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px; /* Espacio entre el título y el contenedor de la calculadora */
+  gap: 20px;
   padding: 20px;
 }
 
@@ -85,11 +86,10 @@ body::before {
   }
 }
 
-/* Nuevo contenedor para la calculadora y el historial */
 .calculator-wrapper {
   display: flex;
-  gap: 20px; /* Espacio entre la calculadora y el historial */
-  align-items: flex-start; /* Alinea la parte superior de ambos */
+  gap: 20px;
+  align-items: flex-start;
 }
 
 .calculator-cyberpunk {
@@ -100,12 +100,12 @@ body::before {
   overflow: hidden;
   border: 2px solid var(--neon-blue);
   animation: border-glow 2s infinite alternate;
-  transform: rotateX(5deg) rotateY(-5deg); /* Slight 3D tilt */
+  transform: rotateX(5deg) rotateY(-5deg);
   transition: transform 0.5s ease-out;
 }
 
 .calculator-cyberpunk:hover {
-  transform: rotateX(0deg) rotateY(0deg); /* Straighten on hover */
+  transform: rotateX(0deg) rotateY(0deg);
 }
 
 @keyframes border-glow {
@@ -151,7 +151,7 @@ body::before {
 .input-line {
   font-size: 0.8em;
   color: var(--neon-blue);
-  min-height: 1.2em; /* Ensure line height */
+  min-height: 1.2em;
   margin-bottom: 5px;
 }
 
@@ -188,8 +188,8 @@ body::before {
 
 .keypad-cyberpunk {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 4 columnas en lugar de 3 */
-  gap: 8px; /* Reducido para mejor distribución */
+  grid-template-columns: repeat(4, 1fr); /* Mantenemos 4 columnas */
+  gap: 8px;
   padding: 10px;
   background-color: var(--light-grey);
 }
@@ -207,6 +207,7 @@ button {
   font-family: "Orbitron", sans-serif;
   position: relative;
   overflow: hidden;
+  z-index: 2; /* Aseguramos que los botones estén por encima del fondo del keypad */
 }
 
 button::before {
@@ -221,7 +222,7 @@ button::before {
     rgba(0, 255, 255, 0.3) 0%,
     rgba(255, 0, 255, 0.3) 100%
   );
-  z-index: 1;
+  z-index: 1; /* Aseguramos que el pseudo-elemento esté por debajo del texto/contenido del botón */
   opacity: 0;
   transition: opacity 0.3s ease-in-out;
 }
@@ -235,7 +236,6 @@ button:active {
   box-shadow: 0 0 15px var(--neon-blue);
 }
 
-/* Neon glow effect for buttons */
 .glow {
   box-shadow: 0 0 5px var(--neon-blue);
 }
@@ -250,6 +250,7 @@ button:active {
   font-size: 1.2em;
   grid-column: span 3; /* Ocupa 3 columnas */
   box-shadow: 0 0 5px var(--neon-pink);
+  z-index: 3; /* Mayor z-index para estar siempre visible */
 }
 
 .btn-clear:hover {
@@ -272,26 +273,29 @@ button:active {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  grid-column: 4; /* Ahora está en la cuarta columna */
-  grid-row: 1 / span 4; /* Ocupa desde la fila 1 hasta la 4 para alinearse con los números */
+  grid-column: 4; /* Sigue en la cuarta columna */
+  grid-row: 1 / span 4; /* Mantenemos el span de 4 filas para el layout */
+  z-index: 1; /* Aseguramos que esté debajo de los botones numéricos si se superponen */
 }
 
 .btn-operator,
 .btn-equals {
-  background-color: var(--neon-pink);
+  background-color: var(
+    --darker-pink
+  ); /* Usamos el nuevo color fucsia más oscuro */
   color: var(--dark-grey);
   font-size: 1.5em;
-  box-shadow: 0 0 8px var(--neon-pink);
+  box-shadow: 0 0 8px var(--darker-pink);
 }
 
 .btn-operator:hover,
 .btn-equals:hover {
   background-color: var(--neon-blue);
-  box-shadow: 0 0 15px var(--neon-blue), 0 0 25px var(--neon-pink);
+  box-shadow: 0 0 15px var(--neon-blue), 0 0 25px var(--darker-pink);
 }
 
 .btn-equals {
-  flex-grow: 1; /* Permite que el botón ENTER crezca y ocupe el espacio restante */
+  flex-grow: 1;
   font-size: 1.8em;
 }
 
@@ -301,16 +305,22 @@ button:active {
   font-size: 1.5em;
 }
 
+/* Ajustes para la distribución de 9 botones + 0 + Backspace */
+.number-pad-cyberpunk button:nth-child(10) {
+  /* Selecciona el botón '0' */
+  grid-column: span 2; /* Hace que el botón '0' ocupe 2 columnas */
+}
+
 /* History Section */
 .history-section-cyberpunk {
-  flex-shrink: 0; /* Evita que el historial se encoja */
-  width: 250px; /* Ancho fijo para el historial */
+  flex-shrink: 0;
+  width: 250px;
   background-color: var(--dark-grey);
   color: var(--neon-blue);
   padding: 15px;
-  max-height: 450px; /* Ajusta la altura máxima para que coincida con la calculadora */
+  max-height: 450px;
   overflow-y: auto;
-  border: 2px solid var(--neon-pink); /* Borde neón para el historial */
+  border: 2px solid var(--neon-pink);
   border-radius: 15px;
   box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.2),
     0 0 20px rgba(255, 0, 255, 0.3);
@@ -350,7 +360,7 @@ button:active {
 
 .history-items-cyberpunk {
   display: flex;
-  flex-direction: column-reverse; /* Newest at the top */
+  flex-direction: column-reverse;
 }
 
 .history-item-cyberpunk {
@@ -362,11 +372,11 @@ button:active {
 }
 
 .history-item-cyberpunk:first-child {
-  border-bottom: none; /* No border for the top item */
+  border-bottom: none;
 }
 
 .history-item-cyberpunk:last-child {
-  border-bottom: 1px dashed rgba(0, 255, 255, 0.2); /* Ensure last item has a border if not empty */
+  border-bottom: 1px dashed rgba(0, 255, 255, 0.2);
 }
 
 .history-item-cyberpunk:hover {

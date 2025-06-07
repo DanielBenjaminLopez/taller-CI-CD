@@ -9,16 +9,13 @@ function App() {
   const [currentInput, setCurrentInput] = useState(1); // 1 for num1, 2 for num2
 
   const handleNumInput = (digit) => {
-    // Si el dígito es '.', permitirlo solo si el número actual no lo contiene
-    if (digit === ".") {
-      if (currentInput === 1 && num1.includes(".")) return;
-      if (currentInput === 2 && num2.includes(".")) return;
-    }
+    // Solo permitir dígitos, ignorar el punto para números enteros
+    if (digit === ".") return;
 
     if (currentInput === 1) {
-      setNum1((prev) => (prev === "0" && digit !== "." ? digit : prev + digit));
+      setNum1((prev) => (prev === "0" ? digit : prev + digit));
     } else {
-      setNum2((prev) => (prev === "0" && digit !== "." ? digit : prev + digit));
+      setNum2((prev) => (prev === "0" ? digit : prev + digit));
     }
     setResult("0"); // Clear result when new input starts
   };
@@ -30,10 +27,12 @@ function App() {
   };
 
   const calculateSum = () => {
-    const n1 = parseFloat(num1);
-    const n2 = parseFloat(num2);
+    // Usar parseInt para asegurar que sean números enteros
+    const n1 = parseInt(num1);
+    const n2 = parseInt(num2);
 
     if (!isNaN(n1) && !isNaN(n2)) {
+      // De acuerdo a tu solicitud de precisión, la suma de enteros es directa.
       const sum = n1 + n2;
       const operationString = `${n1} + ${n2} = ${sum}`;
       setHistory((prevHistory) => [operationString, ...prevHistory]); // Add to top of history
@@ -57,7 +56,6 @@ function App() {
     setHistory([]);
   };
 
-  // Función para borrar el último dígito
   const handleBackspace = () => {
     if (currentInput === 1) {
       setNum1((prev) => (prev.length > 1 ? prev.slice(0, -1) : ""));
@@ -71,8 +69,6 @@ function App() {
     <div className="main-container">
       <h1 className="main-title glow-title">Taller de CI/CD</h1>
       <div className="calculator-wrapper">
-        {" "}
-        {/* Nuevo contenedor para calculadora e historial */}
         <div className="calculator-cyberpunk">
           <div className="display-cyberpunk">
             <div className="input-line">
@@ -95,15 +91,26 @@ function App() {
             </button>
 
             <div className="number-pad-cyberpunk">
-              {[7, 8, 9, 4, 5, 6, 1, 2, 3, 0, "."].map((item) => (
-                <button
-                  key={item}
-                  className="glow"
-                  onClick={() => handleNumInput(item.toString())}
-                >
-                  {item}
-                </button>
-              ))}
+              {[7, 8, 9, 4, 5, 6, 1, 2, 3].map(
+                (
+                  num // Eliminado el 0 y el punto
+                ) => (
+                  <button
+                    key={num}
+                    className="glow"
+                    onClick={() => handleNumInput(num.toString())}
+                  >
+                    {num}
+                  </button>
+                )
+              )}
+              <button
+                className="btn-zero glow"
+                onClick={() => handleNumInput("0")}
+              >
+                0
+              </button>{" "}
+              {/* Botón 0 separado para el layout */}
               <button className="btn-backspace glow" onClick={handleBackspace}>
                 {"<"}
               </button>
@@ -122,6 +129,7 @@ function App() {
             </div>
           </div>
         </div>
+
         <div className="history-section-cyberpunk">
           <div className="history-header-cyberpunk">
             <h3>LOG</h3>
