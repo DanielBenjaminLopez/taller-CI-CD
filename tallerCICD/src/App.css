@@ -95,7 +95,8 @@ body {
 .operator-pad-cyberpunk {
   grid-column: span 3;
   display: flex;
-  gap: 10px;
+  gap: 15px;
+  margin-top: 15px;
 }
 
 button {
@@ -132,6 +133,15 @@ button:hover {
 .btn-equals:hover,
 .btn-operator:hover {
   background: #ff66a3;
+}
+
+.btn-operator {
+  flex-grow: 2;
+  min-width: 0;
+}
+
+.btn-equals {
+  flex-grow: 1;
 }
 
 .history-section-cyberpunk {
