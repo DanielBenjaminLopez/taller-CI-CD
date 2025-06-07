@@ -8,37 +8,37 @@ function App() {
   const [history, setHistory] = useState([]);
 
   const inputDigit = (digit) => {
-    if (display === "0") {
-      setDisplay(digit);
-    } else {
-      setDisplay(display + digit);
-    }
+    setDisplay(display === "0" ? digit : display + digit);
   };
 
   const inputOperator = (op) => {
-    setFirstOperand(parseFloat(display));
-    setOperator(op);
-    setDisplay("0");
+    if (firstOperand === null) {
+      setFirstOperand(parseFloat(display));
+      setOperator(op);
+      setDisplay("0");
+    }
   };
 
   const calculate = () => {
-    const secondOperand = parseFloat(display);
-    let result;
+    if (firstOperand !== null && operator) {
+      const secondOperand = parseFloat(display);
+      let result;
 
-    switch (operator) {
-      case "+":
-        result = firstOperand + secondOperand;
-        break;
-      default:
-        return;
+      switch (operator) {
+        case "+":
+          result = firstOperand + secondOperand;
+          break;
+        default:
+          return;
+      }
+
+      const operationString = `${firstOperand} ${operator} ${secondOperand} = ${result}`;
+      setHistory([...history, operationString]);
+
+      setDisplay(result.toString());
+      setFirstOperand(null);
+      setOperator(null);
     }
-
-    const operationString = `${firstOperand} ${operator} ${secondOperand} = ${result}`;
-    setHistory([...history, operationString]);
-
-    setDisplay(result.toString());
-    setFirstOperand(null);
-    setOperator(null);
   };
 
   const clearAll = () => {
