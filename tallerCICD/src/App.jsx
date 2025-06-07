@@ -9,10 +9,16 @@ function App() {
   const [currentInput, setCurrentInput] = useState(1); // 1 for num1, 2 for num2
 
   const handleNumInput = (digit) => {
+    // Si el dígito es '.', permitirlo solo si el número actual no lo contiene
+    if (digit === ".") {
+      if (currentInput === 1 && num1.includes(".")) return;
+      if (currentInput === 2 && num2.includes(".")) return;
+    }
+
     if (currentInput === 1) {
-      setNum1((prev) => (prev === "0" ? digit : prev + digit));
+      setNum1((prev) => (prev === "0" && digit !== "." ? digit : prev + digit));
     } else {
-      setNum2((prev) => (prev === "0" ? digit : prev + digit));
+      setNum2((prev) => (prev === "0" && digit !== "." ? digit : prev + digit));
     }
     setResult("0"); // Clear result when new input starts
   };
@@ -51,52 +57,71 @@ function App() {
     setHistory([]);
   };
 
+  // Función para borrar el último dígito
+  const handleBackspace = () => {
+    if (currentInput === 1) {
+      setNum1((prev) => (prev.length > 1 ? prev.slice(0, -1) : ""));
+    } else {
+      setNum2((prev) => (prev.length > 1 ? prev.slice(0, -1) : ""));
+    }
+    setResult("0");
+  };
+
   return (
-    <div className="calculator-container">
-      <div className="calculator-cyberpunk">
-        <div className="display-cyberpunk">
-          <div className="input-line">
-            <span className={currentInput === 1 ? "active-input" : ""}>
-              {num1 === "" ? "0" : num1}
-            </span>
-            <span className="operator-display">+</span>
-            <span className={currentInput === 2 ? "active-input" : ""}>
-              {num2 === "" ? "0" : num2}
-            </span>
+    <div className="main-container">
+      <h1 className="main-title glow-title">Taller de CI/CD</h1>
+      <div className="calculator-wrapper">
+        {" "}
+        {/* Nuevo contenedor para calculadora e historial */}
+        <div className="calculator-cyberpunk">
+          <div className="display-cyberpunk">
+            <div className="input-line">
+              <span className={currentInput === 1 ? "active-input" : ""}>
+                {num1 === "" ? "0" : num1}
+              </span>
+              <span className="operator-display">+</span>
+              <span className={currentInput === 2 ? "active-input" : ""}>
+                {num2 === "" ? "0" : num2}
+              </span>
+            </div>
+            <div className="result-line">
+              <span className="equals-sign">=</span> {result}
+            </div>
           </div>
-          <div className="result-line">
-            <span className="equals-sign">=</span> {result}
-          </div>
-        </div>
 
-        <div className="keypad-cyberpunk">
-          <button className="btn-clear glow" onClick={clearAll}>
-            CLEAR
-          </button>
+          <div className="keypad-cyberpunk">
+            <button className="btn-clear glow" onClick={clearAll}>
+              CLEAR
+            </button>
 
-          <div className="number-pad-cyberpunk">
-            {[7, 8, 9, 4, 5, 6, 1, 2, 3, 0, "."].map((item) => (
-              <button
-                key={item}
-                className="glow"
-                onClick={() => handleNumInput(item.toString())}
-              >
-                {item}
+            <div className="number-pad-cyberpunk">
+              {[7, 8, 9, 4, 5, 6, 1, 2, 3, 0, "."].map((item) => (
+                <button
+                  key={item}
+                  className="glow"
+                  onClick={() => handleNumInput(item.toString())}
+                >
+                  {item}
+                </button>
+              ))}
+              <button className="btn-backspace glow" onClick={handleBackspace}>
+                {"<"}
               </button>
-            ))}
-            <button className="btn-backspace glow">{"<"}</button>
-          </div>
+            </div>
 
-          <div className="operator-pad-cyberpunk">
-            <button className="btn-operator glow" onClick={handleOperatorClick}>
-              +
-            </button>
-            <button className="btn-equals glow" onClick={calculateSum}>
-              ENTER
-            </button>
+            <div className="operator-pad-cyberpunk">
+              <button
+                className="btn-operator glow"
+                onClick={handleOperatorClick}
+              >
+                +
+              </button>
+              <button className="btn-equals glow" onClick={calculateSum}>
+                ENTER
+              </button>
+            </div>
           </div>
         </div>
-
         <div className="history-section-cyberpunk">
           <div className="history-header-cyberpunk">
             <h3>LOG</h3>
@@ -112,7 +137,7 @@ function App() {
                 </div>
               ))
             ) : (
-              <div classNamename="history-placeholder">No data streams</div>
+              <div className="history-placeholder">No data streams</div>
             )}
           </div>
         </div>
