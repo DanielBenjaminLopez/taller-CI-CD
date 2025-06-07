@@ -47,51 +47,47 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./tallerCICD/dist
       - name: Notificar éxito en Slack
-        if: success() # Solo si todo lo anterior funcionó
+        if: success()
         uses: slackapi/slack-github-action@v1
         with:
           payload: |
-            ${{ toJson(
-              {
-                "text": "✅ Despliegue exitoso",
-                "blocks": [
-                  {
-                    "type": "section",
-                    "text": {
-                      "type": "mrkdwn",
-                      "text": "*🚀 Despliegue exitoso*\n• *Repositorio*: `${{ github.repository }}`\n• *URL*: <https://danielbenjaminlopez.github.io/taller-CI-CD/|Ver sitio>\n• *Commit*: `${{ github.sha }}`\n• *Hora*: `${{ github.event.head_commit.timestamp }}`"
-                    }
+            {
+              "text": "✅ Despliegue exitoso",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*🚀 Despliegue exitoso*\n• *Repositorio*: `${{ github.repository }}`\n• *URL*: <https://danielbenjaminlopez.github.io/taller-CI-CD/|Ver sitio>\n• *Commit*: `${{ github.sha }}`\n• *Hora*: `${{ github.event.head_commit.timestamp }}`
                   }
-                ]
-              }
-            ) }}
+                }
+              ]
+            }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Notificar fallo en Slack
-        if: failure() # Si algún paso anterior falló
+        if: failure()
         uses: slackapi/slack-github-action@v1
         with:
           payload: |
-            ${{ toJson(
-              {
-                "text": "❌ Falló el despliegue",
-                "blocks": [
-                  {
-                    "type": "section",
-                    "text": {
-                      "type": "mrkdwn",
-                      "text": "*⚠️ Falló el despliegue*\n• *Repositorio*: `${{ github.repository }}`\n• *Razón*: Revisa los logs\n• *Commit*: `${{ github.sha }}`\n• *Logs*: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|Ver detalles>"
-                    }
+            {
+              "text": "❌ Falló el despliegue",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*⚠️ Falló el despliegue*\n• *Repositorio*: `${{ github.repository }}`\n• *Razón*: Revisa los logs\n• *Commit*: `${{ github.sha }}`\n• *Logs*: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|Ver detalles>"
                   }
-                ],
-                "attachments": [
-                  {
-                    "color": "#ff0000",
-                    "text": "Posibles causas:\n- Error en `npm run build`\n- Problema con GitHub Pages\n- Variables de entorno faltantes"
-                  }
-                ]
-              }
-            ) }}
+                }
+              ],
+              "attachments": [
+                {
+                  "color": "#ff0000",
+                  "text": "Posibles causas:\n- Error en `npm run build`\n- Problema con GitHub Pages\n- Variables de entorno faltantes"
+                }
+              ]
+            }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
