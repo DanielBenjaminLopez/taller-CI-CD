@@ -91,3 +91,19 @@ jobs:
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  update-taiga:
+    needs: test
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Required to access full git history for commit parsing
+
+      - name: Update Taiga User Story
+        uses: lauacosta/backlogr-action@v0.0.2
+        with:
+          taiga-username: ${{ secrets.TAIGA_USERNAME }}
+          taiga-password: ${{ secrets.TAIGA_PASSWORD }}
+          project-name: ${{ secrets.PROJECT_NAME }}
