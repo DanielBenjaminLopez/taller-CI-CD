@@ -58,7 +58,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "*🚀 Despliegue exitoso*\n• *Repositorio*: `${{ github.repository }}`\n• *URL*: <https://danielbenjaminlopez.github.io/taller-CI-CD/|Ver sitio>\n• *Commit*: `${{ github.sha }}`\n• *Hora*: `${{ github.run_started_at }}`
+                    "text": "*🚀 Despliegue exitoso*\n• *Repositorio*: `${{ github.repository }}`\n• *URL*: <https://danielbenjaminlopez.github.io/taller-CI-CD/|Ver sitio>\n• *Commit*: `${{ github.sha }}`\n•`
                   }
                 }
               ]
