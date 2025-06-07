@@ -52,7 +52,7 @@ jobs:
         with:
           payload: |
             {
-              "text": "*✅ Despliegue exitoso*\n• *Repositorio*: `${{ github.repository }}`\n• *URL*: <https://danielbenjaminlopez.github.io/taller-CI-CD/|Ver sitio>\n• *Commit*: `${{ github.sha }}`"        
+              "text": "*✅ Despliegue exitoso*\n• *Repositorio*: `${{ github.repository }}`\n• *URL*: <https://danielbenjaminlopez.github.io/taller-CI-CD/|Ver sitio>\n• *Commit*: `${{ github.sha }}`",        
               "blocks": [
                 {
                   "type": "section",
