@@ -27,6 +27,31 @@ jobs:
       - name: Test automáticos
         working-directory: ./tallerCICD
         run: node --test
+      - name: Notificar fallo en Slack
+        if: failure()
+        uses: slackapi/slack-github-action@v1
+        with:
+          payload: |
+            {
+              "text": "⚠️ Falló el test\n• *Repositorio*: `${{ github.repository }}`\n• *Razón*: Revisa los logs\n• *Commit*: `${{ github.sha }}`\n• *Logs*: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|Ver detalles>",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": " "
+                  }
+                }
+              ],
+              "attachments": [
+                {
+                  "color": "#ff0000",
+                  "text": "Posibles causas:\n- Error en `npm run build`\n- Problema con GitHub Pages\n- Variables de entorno faltantes"
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   deploy:
     needs: test
@@ -110,7 +135,6 @@ jobs:
           taiga-password: ${{ secrets.TAIGA_PASSWORD }}
           project-name: ${{ secrets.PROJECT_NAME }}
 
-      #A prueba
       - name: Report Status
         run: |
           if [ "${{ steps.taiga.outputs.success }}" == "true" ]; then
