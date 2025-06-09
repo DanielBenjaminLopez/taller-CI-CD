@@ -135,14 +135,6 @@ jobs:
           taiga-password: ${{ secrets.TAIGA_PASSWORD }}
           project-name: ${{ secrets.PROJECT_NAME }}
 
-      - name: Report Status
-        run: |
-          if [ "${{ steps.taiga.outputs.success }}" == "true" ]; then
-            echo "✅ User Story #${{ steps.taiga.outputs.user-story-id }} → ${{ steps.taiga.outputs.action-taken }}"
-          else
-            echo "❌ User Story update failed - check commit format and Taiga connection"
-          fi
-
       - name: Always notify team
         if: always()
         uses: 8398a7/action-slack@v3
@@ -157,3 +149,10 @@ jobs:
             fi
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      - name: Report Status
+        run: |
+          if [ "${{ steps.taiga.outputs.success }}" == "true" ]; then
+            echo "✅ User Story #${{ steps.taiga.outputs.user-story-id }} → ${{ steps.taiga.outputs.action-taken }}"
+          else
+            echo "❌ User Story update failed - check commit format and Taiga connection"
+          fi
