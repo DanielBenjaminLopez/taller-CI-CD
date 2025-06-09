@@ -142,7 +142,7 @@ jobs:
             echo "❌ User Story update failed - check commit format and Taiga connection"
             Exit 1
           fi
-      #NOTIFICACIONES
+      #NOTIFICACIONES_1
       - name: Always notify team
         if: always()
         uses: 8398a7/action-slack@v3
