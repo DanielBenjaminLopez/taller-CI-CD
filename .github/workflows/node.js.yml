@@ -141,18 +141,7 @@ jobs:
         with:
           status: ${{ job.status }}
           text: |
-            ✅Taiga update ${{ job.status }} for commit: ${{ github.event.head_commit.message }}
-            if [ "${{ steps.taiga.outputs.success }}" == "true" ]; then
-            echo "✅ User Story #${{ steps.taiga.outputs.user-story-id }} → ${{ steps.taiga.outputs.action-taken }}"
-            else
-              echo "❌ User Story update failed - check commit format and Taiga connection"
-            fi
+            📧 Taiga update ${{ job.status }} for commit: ${{ github.event.head_commit.message }}
+
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-      - name: Report Status
-        run: |
-          if [ "${{ steps.taiga.outputs.success }}" == "true" ]; then
-            echo "✅ User Story #${{ steps.taiga.outputs.user-story-id }} → ${{ steps.taiga.outputs.action-taken }}"
-          else
-            echo "❌ User Story update failed - check commit format and Taiga connection"
-          fi
