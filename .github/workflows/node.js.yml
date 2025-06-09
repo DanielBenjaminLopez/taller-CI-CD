@@ -58,7 +58,7 @@ jobs:
         with:
           payload: |
             {
-              "text": "*✅ Test exitoso*\n• ",        
+              "text": "*✅ Test exitoso*\n ",        
               "blocks": [
                 {
                   "type": "section",
