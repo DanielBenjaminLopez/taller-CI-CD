@@ -1,7 +1,7 @@
 # Taller de Integración Continua
 ### Despliegue: https://danielbenjaminlopez.github.io/taller-CI-CD/
 # 
-![{8283275A-25C6-4C33-B37C-323A699AC5BF}](https://github.com/user-attachments/assets/7caf9b81-774d-4287-af92-028d00302c36)
+![{F011E645-EB5D-4676-B7D1-9FD8219B3AF1}](https://github.com/user-attachments/assets/8fb6a5a7-e98d-45cd-bca4-04946ca79b27)
 
 
 ## Commit Message Format
