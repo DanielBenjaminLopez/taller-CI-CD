@@ -270,7 +270,7 @@ jobs:
             echo "❌ User Story update failed - check commit format and Taiga connection"
             exit 1 # Use exit 1 to explicitly fail the step if Taiga update fails
           fi
-      #NOTIFICACIONES_1
+      #NOTIFICACIONES_TAIGA
       - name: Always notify team
         if: always()
         uses: 8398a7/action-slack@v3
