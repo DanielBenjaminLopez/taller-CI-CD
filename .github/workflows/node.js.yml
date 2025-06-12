@@ -145,7 +145,6 @@ jobs:
       - name: Instalar Lighthouse CI y jq
         run: |
           npm install -g @lhci/cli # Instala la herramienta de línea de comandos de Lighthouse CI
-          sudo apt-get update && sudo apt-get install -y jq # Instala 'jq' para parsear el JSON del reporte
 
       - name: Ejecutar Auditoría Lighthouse
         # Esta acción ejecuta Lighthouse y guarda los reportes en una carpeta .lighthouseci/
@@ -183,8 +182,8 @@ jobs:
 
             # Contenido del campo 'text' para el mensaje de notificación principal
             # Ahora incluirá las puntuaciones resumidas
-            SLACK_TEXT_EXITO="*📊 Auditoría Lighthouse Completada para ${{ github.repository }}*\n"
-            SLACK_TEXT_EXITO+="*Rendimiento*: \`${PERF_SCORE_FORMATTED}\` | "
+            SLACK_TEXT_EXITO="*📊 Auditoría Lighthouse Completada para ${{ github.repository }} \n*"
+            SLACK_TEXT_EXITO+="\n *Rendimiento*: \`${PERF_SCORE_FORMATTED}\` | "
             SLACK_TEXT_EXITO+="*Accesibilidad*: \`${ACC_SCORE_FORMATTED}\` | "
             SLACK_TEXT_EXITO+="*Mejores Prácticas*: \`${BP_SCORE_FORMATTED}\` | "
             SLACK_TEXT_EXITO+="*SEO*: \`${SEO_SCORE_FORMATTED}\`"
