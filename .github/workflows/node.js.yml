@@ -137,10 +137,10 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   lighthouse:
-    needs: deploy # Asegura que Lighthouse se ejecute después del despliegue
+    needs: deploy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4 # Necesario para acceder a los archivos del repositorio si fuera necesario
+      - uses: actions/checkout@v4
 
       - name: Instalar Lighthouse CI y jq
         run: |
@@ -182,8 +182,8 @@ jobs:
 
             # Contenido del campo 'text' para el mensaje de notificación principal
             # Ahora incluirá las puntuaciones resumidas
-            SLACK_TEXT_EXITO="*📊 Auditoría Lighthouse Completada para ${{ github.repository }}*"
-            SLACK_TEXT_EXITO+="* Rendimiento*: \`${PERF_SCORE_FORMATTED}\` | "
+            SLACK_TEXT_EXITO="*📊 Auditoría Lighthouse Completada para ${{ github.repository }}  * "
+            SLACK_TEXT_EXITO+=" * Rendimiento*: \`${PERF_SCORE_FORMATTED}\` | "
             SLACK_TEXT_EXITO+="*Accesibilidad*: \`${ACC_SCORE_FORMATTED}\` | "
             SLACK_TEXT_EXITO+="*Mejores Prácticas*: \`${BP_SCORE_FORMATTED}\` | "
             SLACK_TEXT_EXITO+="*SEO*: \`${SEO_SCORE_FORMATTED}\`"
@@ -243,15 +243,15 @@ jobs:
           # Usamos la salida 'SLACK_PAYLOAD' del paso anterior
           payload: ${{ steps.prepare_slack_payload.outputs.SLACK_PAYLOAD }}
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # Usa tu Webhook URL existente
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   update-taiga:
-    needs: lighthouse # Asegura que Taiga se actualice después de los tests y Lighthouse
+    needs: lighthouse
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Required to access full git history for commit parsing
+          fetch-depth: 0
 
       - name: Update Taiga User Story
         id: taiga
