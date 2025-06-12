@@ -58,7 +58,7 @@ jobs:
         with:
           payload: |
             {
-              "text": "*✅ Test exitoso*\n ",        
+              "text": "*✅ Test exitoso*\n ",
               "blocks": [
                 {
                   "type": "section",
@@ -96,7 +96,7 @@ jobs:
         with:
           payload: |
             {
-              "text": "*✅ Despliegue exitoso*\n• *Repositorio*: `${{ github.repository }}`\n• *URL*: <https://danielbenjaminlopez.github.io/taller-CI-CD/|Ver sitio>\n• *Commit*: `${{ github.sha }}`",        
+              "text": "*✅ Despliegue exitoso*\n• *Repositorio*: `${{ github.repository }}`\n• *URL*: <https://danielbenjaminlopez.github.io/taller-CI-CD/|Ver sitio>\n• *Commit*: `${{ github.sha }}`",
               "blocks": [
                 {
                   "type": "section",
@@ -136,8 +136,96 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
+  lighthouse:
+    needs: deploy # Asegura que Lighthouse se ejecute solo después de un despliegue exitoso
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalación de Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      - name: Ejecutar Lighthouse CI
+        id: lighthouse_audit # ID para acceder a los outputs de esta acción
+        uses: treosh/lighthouse-ci-action@v11
+        with:
+          # La URL de tu aplicación desplegada. Asegúrate de que esta URL sea accesible públicamente.
+          urls: https://danielbenjaminlopez.github.io/taller-CI-CD/
+          uploadArtifacts: true # Sube los reportes de Lighthouse como artefactos del flujo de trabajo
+          # fail_on_score: true # Descomenta para que la acción falle si alguna categoría está por debajo de 90 (por defecto)
+
+      - name: Parsear el Resumen de Lighthouse para Notificación en Slack
+        id: parse_lighthouse_summary
+        if: success() && steps.lighthouse_audit.outcome == 'success'
+        run: |
+          # Instala `jq` para parsear JSON si no está presente (generalmente lo está en ubuntu-latest)
+          sudo apt-get update && sudo apt-get install -y jq
+
+          SUMMARY='${{ steps.lighthouse_audit.outputs.summary }}'
+          # Extrae las puntuaciones individuales del JSON de resumen
+          PERF_SCORE=$(echo "$SUMMARY" | jq -r '.performance')
+          ACC_SCORE=$(echo "$SUMMARY" | jq -r '.accessibility')
+          BP_SCORE=$(echo "$SUMMARY" | jq -r '.["best-practices"]')
+          SEO_SCORE=$(echo "$SUMMARY" | jq -r '.seo')
+          PWA_SCORE=$(echo "$SUMMARY" | jq -r '.pwa')
+
+          # Establece las puntuaciones como outputs del paso
+          echo "::set-output name=performance_score::$PERF_SCORE"
+          echo "::set-output name=accessibility_score::$ACC_SCORE"
+          echo "::set-output name=best_practices_score::$BP_SCORE"
+          echo "::set-output name=seo_score::$SEO_SCORE"
+          echo "::set-output name=pwa_score::$PWA_SCORE"
+
+      - name: Notificar éxito de Lighthouse en Slack
+        if: success() && steps.lighthouse_audit.outcome == 'success'
+        uses: slackapi/slack-github-action@v1
+        with:
+          payload: |
+            {
+              "text": "*✅ Auditoría Lighthouse exitosa!*",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*URL*: ${{ steps.lighthouse_audit.outputs.url }}\n• *Performance*: `${{ steps.parse_lighthouse_summary.outputs.performance_score }}`\n• *Accessibility*: `${{ steps.parse_lighthouse_summary.outputs.accessibility_score }}`\n• *Best Practices*: `${{ steps.parse_lighthouse_summary.outputs.best_practices_score }}`\n• *SEO*: `${{ steps.parse_lighthouse_summary.outputs.seo_score }}`\n• *PWA*: `${{ steps.parse_lighthouse_summary.outputs.pwa_score }}`\n• *Reporte*: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifacts|Ver reporte detallado>"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Notificar fallo de Lighthouse en Slack
+        if: failure() || steps.lighthouse_audit.outcome == 'failure'
+        uses: slackapi/slack-github-action@v1
+        with:
+          payload: |
+            {
+              "text": "⚠️ *Auditoría Lighthouse fallida*\n• *URL*: ${{ steps.lighthouse_audit.outputs.url }}\n• *Razón*: Revisa los logs de la acción de Lighthouse CI para más detalles.\n• *Logs*: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|Ver detalles>",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": " "
+                  }
+                }
+              ],
+              "attachments": [
+                {
+                  "color": "#ff0000",
+                  "text": "Posibles causas:\n- Puntuaciones de Lighthouse bajas (rendimiento, accesibilidad, etc.)\n- Error en la URL de auditoría"
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
   update-taiga:
-    needs: deploy
+    needs: lighthouse # Asegura que Taiga se actualice después de los tests y Lighthouse
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -159,7 +247,7 @@ jobs:
             echo "✅ User Story #${{ steps.taiga.outputs.user-story-id }} → ${{ steps.taiga.outputs.action-taken }}"
           else
             echo "❌ User Story update failed - check commit format and Taiga connection"
-            Exit 1
+            exit 1 # Use exit 1 to explicitly fail the step if Taiga update fails
           fi
       #NOTIFICACIONES_1
       - name: Always notify team
