@@ -184,7 +184,7 @@ jobs:
         with:
           payload: |
             {
-              "text": "*✅ Auditoría Lighthouse exitosa!*",
+               "text": "*URL*: ${{ steps.lighthouse_audit.outputs.url }}\n• *Performance*: `${{ steps.parse_lighthouse_summary.outputs.performance_score }}`\n• *Accessibility*: `${{ steps.parse_lighthouse_summary.outputs.accessibility_score }}`\n• *Best Practices*: `${{ steps.parse_lighthouse_summary.outputs.best_practices_score }}`\n• *SEO*: `${{ steps.parse_lighthouse_summary.outputs.seo_score }}`\n• *PWA*: `${{ steps.parse_lighthouse_summary.outputs.pwa_score }}`\n• *Reporte*: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifacts|Ver reporte detallado>",
               "blocks": [
                 {
                   "type": "section",
