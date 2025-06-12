@@ -1,295 +1,172 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs 
 
-name: Node.js CI
+name: Node.js CI 
 
-on:
-  push:
-    branches: ["main"]
+on: 
+  push: 
+    branches: ["main"] 
 
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+jobs: 
+  test: 
+    runs-on: ubuntu-latest 
+    steps: 
+      - uses: actions/checkout@v4 
 
-      - name: Instalación de Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20.x
-          cache: "npm"
-          cache-dependency-path: "tallerCICD/package-lock.json"
+      - name: Instalación de Node.js 
+        uses: actions/setup-node@v4 
+        with: 
+          node-version: 20.x 
+          cache: "npm" 
+          cache-dependency-path: "tallerCICD/package-lock.json" 
 
-      - name: Instala dependencias
-        working-directory: ./tallerCICD
-        run: npm ci
+      - name: Instala dependencias 
+        working-directory: ./tallerCICD 
+        run: npm ci 
 
-      - name: Test automáticos
-        working-directory: ./tallerCICD
-        run: node --test
-      - name: Notificar fallo en Slack
-        if: failure()
-        uses: slackapi/slack-github-action@v1
-        with:
-          payload: |
-            {
-              "text": "⚠️ Falló el test\n• *Repositorio*: `${{ github.repository }}`\n• *Razón*: Revisa los logs\n• *Commit*: `${{ github.sha }}`\n• *Logs*: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|Ver detalles>",
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": " "
-                  }
-                }
-              ],
-              "attachments": [
-                {
-                  "color": "#ff0000",
-                  "text": "Posibles causas:\n- Error en `npm run build`\n- Problema con GitHub Pages\n- Variables de entorno faltantes"
-                }
-              ]
-            }
-        env:
+      - name: Test automáticos 
+        working-directory: ./tallerCICD 
+        run: node --test 
+      - name: Notificar fallo en Slack 
+        if: failure() 
+        uses: slackapi/slack-github-action@v1 
+        with: 
+          payload: | 
+            { 
+              "text": "⚠️ Falló el test\n• *Repositorio*: `${{ github.repository }}`\n• *Razón*: Revisa los logs\n• *Commit*: `${{ github.sha }}`\n• *Logs*: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|Ver detalles>", 
+              "blocks": [ 
+                { 
+                  "type": "section", 
+                  "text": { 
+                    "type": "mrkdwn", 
+                    "text": " " 
+                  } 
+                } 
+              ], 
+              "attachments": [ 
+                { 
+                  "color": "#ff0000", 
+                  "text": "Posibles causas:\n- Error en `npm run build`\n- Problema con GitHub Pages\n- Variables de entorno faltantes" 
+                } 
+              ] 
+            } 
+        env: 
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} 
+      - name: Notificar éxito en Slack 
+        if: success() 
+        uses: slackapi/slack-github-action@v1 
+        with: 
+          payload: | 
+            { 
+              "text": "*✅ Test exitoso*\n ",         
+              "blocks": [ 
+                { 
+                  "type": "section", 
+                  "text": { 
+                    "type": "mrkdwn", 
+                    "text": " " 
+                  } 
+                } 
+              ] 
+            } 
+        env: 
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} 
+
+  deploy: 
+    needs: test 
+    runs-on: ubuntu-latest 
+    steps: 
+      - uses: actions/checkout@v4 
+      - uses: actions/setup-node@v4 
+        with: 
+          node-version: 20.x 
+      - name: Instalar dependencias y construir 
+        working-directory: ./tallerCICD 
+        run: | 
+          npm ci 
+          npm run build 
+      - name: Desplegar en GitHub Pages 
+        uses: peaceiris/actions-gh-pages@v3 
+        with: 
+          github_token: ${{ secrets.GITHUB_TOKEN }} 
+          publish_dir: ./tallerCICD/dist 
+      - name: Notificar éxito en Slack 
+        if: success() 
+        uses: slackapi/slack-github-action@v1 
+        with: 
+          payload: | 
+            { 
+              "text": "*✅ Despliegue exitoso*\n• *Repositorio*: `${{ github.repository }}`\n• *URL*: <https://danielbenjaminlopez.github.io/taller-CI-CD/|Ver sitio>\n• *Commit*: `${{ github.sha }}`",         
+              "blocks": [ 
+                { 
+                  "type": "section", 
+                  "text": { 
+                    "type": "mrkdwn", 
+                    "text": " " 
+                  } 
+                } 
+              ] 
+            } 
+        env: 
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} 
+
+      - name: Notificar fallo en Slack 
+        if: failure() 
+        uses: slackapi/slack-github-action@v1 
+        with: 
+          payload: | 
+            { 
+              "text": "⚠️ Falló el despliegue\n• *Repositorio*: `${{ github.repository }}`\n• *Razón*: Revisa los logs\n• *Commit*: `${{ github.sha }}`\n• *Logs*: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|Ver detalles>", 
+              "blocks": [ 
+                { 
+                  "type": "section", 
+                  "text": { 
+                    "type": "mrkdwn", 
+                    "text": " " 
+                  } 
+                } 
+              ], 
+              "attachments": [ 
+                { 
+                  "color": "#ff0000", 
+                  "text": "Posibles causas:\n- Error en `npm run build`\n- Problema con GitHub Pages\n- Variables de entorno faltantes" 
+                } 
+              ] 
+            } 
+        env: 
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} 
+
+  update-taiga: 
+    needs: deploy 
+    runs-on: ubuntu-latest 
+    steps: 
+      - uses: actions/checkout@v4 
+        with: 
+          fetch-depth: 0 # Required to access full git history for commit parsing 
+
+      - name: Update Taiga User Story 
+        id: taiga 
+        uses: lauacosta/backlogr-action@v0.0.2 
+        continue-on-error: true 
+        with: 
+          taiga-username: ${{ secrets.TAIGA_USERNAME }} 
+          taiga-password: ${{ secrets.TAIGA_PASSWORD }} 
+          project-name: ${{ secrets.PROJECT_NAME }} 
+
+      - name: Report Status 
+        run: | 
+          if [ "${{ steps.taiga.outputs.success }}" == "true" ]; then 
+            echo "✅ User Story #${{ steps.taiga.outputs.user-story-id }} → ${{ steps.taiga.outputs.action-taken }}" 
+          else 
+            echo "❌ User Story update failed - check commit format and Taiga connection" 
+            exit 1 
+          fi 
+      #NOTIFICACIONES_1 
+      - name: Always notify team 
+        if: always() 
+        uses: 8398a7/action-slack@v3 
+        with: 
+          status: ${{ job.status }} 
+          text: | 
+            📧Taiga update ${{ job.status }} for commit: ${{ github.event.head_commit.message }} 
+        env: 
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-      - name: Notificar éxito en Slack
-        if: success()
-        uses: slackapi/slack-github-action@v1
-        with:
-          payload: |
-            {
-              "text": "*✅ Test exitoso*\n ",
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": " "
-                  }
-                }
-              ]
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-
-  deploy:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20.x
-      - name: Instalar dependencias y construir
-        working-directory: ./tallerCICD
-        run: |
-          npm ci
-          npm run build
-      - name: Desplegar en GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./tallerCICD/dist
-      - name: Notificar éxito en Slack
-        if: success()
-        uses: slackapi/slack-github-action@v1
-        with:
-          payload: |
-            {
-              "text": "*✅ Despliegue exitoso*\n• *Repositorio*: `${{ github.repository }}`\n• *URL*: <https://danielbenjaminlopez.github.io/taller-CI-CD/|Ver sitio>\n• *Commit*: `${{ github.sha }}`",
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": " "
-                  }
-                }
-              ]
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-
-      - name: Notificar fallo en Slack
-        if: failure()
-        uses: slackapi/slack-github-action@v1
-        with:
-          payload: |
-            {
-              "text": "⚠️ Falló el despliegue\n• *Repositorio*: `${{ github.repository }}`\n• *Razón*: Revisa los logs\n• *Commit*: `${{ github.sha }}`\n• *Logs*: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|Ver detalles>",
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": " "
-                  }
-                }
-              ]
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-
-  lighthouse:
-    needs: deploy
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Instalar Lighthouse CI y jq
-        run: |
-          npm install -g @lhci/cli # Instala la herramienta de línea de comandos de Lighthouse CI
-
-      - name: Ejecutar Auditoría Lighthouse
-        # Esta acción ejecuta Lighthouse y guarda los reportes en una carpeta .lighthouseci/
-        # continue-on-error: true permite que los siguientes pasos se ejecuten incluso si la auditoría tiene fallos
-        run: lhci collect --url=https://danielbenjaminlopez.github.io/taller-CI-CD/ --output-path=.lighthouseci/
-        continue-on-error: true # Mantenerlo para no detener el workflow completamente si la auditoría falla
-
-      - name: Listar contenido de .lighthouseci/ para diagnóstico
-        run: ls -la ./.lighthouseci/
-        continue-on-error: true # Permite que este paso falle sin detener el workflow si la carpeta no existe
-
-      - name: Verificar existencia de reportes Lighthouse
-        id: check_lighthouse_dir
-        run: |
-          # Verifica si la carpeta .lighthouseci existe y si contiene archivos
-          if [ -d "./.lighthouseci" ] && [ "$(ls -A ./.lighthouseci)" ]; then
-            echo "found_reports=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "found_reports=false" >> "$GITHUB_OUTPUT"
-          fi
-        shell: bash
-
-      - name: Subir artefactos de Lighthouse (opcional, para revisar los reportes en GitHub Actions)
-        # Este paso solo se ejecutará si se encontraron reportes en la carpeta .lighthouseci/
-        if: steps.check_lighthouse_dir.outputs.found_reports == 'true'
-        uses: actions/upload-artifact@v4
-        with:
-          name: lighthouse-results
-          path: ./.lighthouseci/
-
-      - name: Obtener resultados de Lighthouse y preparar payload de Slack
-        id: prepare_slack_payload # Le damos un ID a este paso para poder referenciar sus salidas
-        run: |
-          # Buscar la ruta del último reporte JSON generado por Lighthouse
-          LIGHTHOUSE_REPORT_PATH=$(find ./.lighthouseci -name "*.json" | head -n 1)
-
-          # Inicializar variables por defecto para el caso de que no se encuentre el reporte
-          SLACK_TEXT_FALLO="⚠️ *Auditoría Lighthouse Fallida* para ${{ github.repository }}. No se pudo generar el reporte."
-
-          if [ -f "$LIGHTHOUSE_REPORT_PATH" ]; then
-            # Parsear el reporte JSON para obtener las puntuaciones de las categorías
-            PERF_SCORE=$(jq '."categories"."performance"."score"' "$LIGHTHOUSE_REPORT_PATH")
-            ACC_SCORE=$(jq '."categories"."accessibility"."score"' "$LIGHTHOUSE_REPORT_PATH")
-            BP_SCORE=$(jq '."categories"."best-practices"."score"' "$LIGHTHOUSE_REPORT_PATH")
-            SEO_SCORE=$(jq '."categories"."seo"."score"' "$LIGHTHOUSE_REPORT_PATH")
-
-            # Convertir las puntuaciones de 0-1 a 0-100 y formatear a entero sin decimales
-            PERF_SCORE_FORMATTED=$(awk "BEGIN {printf \"%.0f\", $PERF_SCORE * 100}")
-            ACC_SCORE_FORMATTED=$(awk "BEGIN {printf \"%.0f\", $ACC_SCORE * 100}")
-            BP_SCORE_FORMATTED=$(awk "BEGIN {printf \"%.0f\", $BP_SCORE * 100}")
-            SEO_SCORE_FORMATTED=$(awk "BEGIN {printf \"%.0f\", $SEO_SCORE * 100}")
-
-            # Contenido del campo 'text' para el mensaje de notificación principal
-            # Ahora incluirá las puntuaciones resumidas
-            SLACK_TEXT_EXITO="*📊 Auditoría Lighthouse Completada para ${{ github.repository }}  * "
-            SLACK_TEXT_EXITO+=" * Rendimiento*: \`${PERF_SCORE_FORMATTED}\` | "
-            SLACK_TEXT_EXITO+="*Accesibilidad*: \`${ACC_SCORE_FORMATTED}\` | "
-            SLACK_TEXT_EXITO+="*Mejores Prácticas*: \`${BP_SCORE_FORMATTED}\` | "
-            SLACK_TEXT_EXITO+="*SEO*: \`${SEO_SCORE_FORMATTED}\`"
-
-            # Contenido del campo 'text' dentro del bloque mrkdwn para el mensaje detallado (esto ya estaba bien)
-            BLOCK_MRKDWN_CONTENT="*URL Auditada*: <https://danielbenjaminlopez.github.io/taller-CI-CD/|https://danielbenjaminlopez.github.io/taller-CI-CD/>\n"
-            BLOCK_MRKDWN_CONTENT+="*Rendimiento*: \`${PERF_SCORE_FORMATTED}\`\n"
-            BLOCK_MRKDWN_CONTENT+="*Accesibilidad*: \`${ACC_SCORE_FORMATTED}\`\n"
-            BLOCK_MRKDWN_CONTENT+="*Mejores Prácticas*: \`${BP_SCORE_FORMATTED}\`\n"
-            BLOCK_MRKDWN_CONTENT+="*SEO*: \`${SEO_SCORE_FORMATTED}\`\n"
-            BLOCK_MRKDWN_CONTENT+="*Ver Logs de la Acción*: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|Ver detalles>"
-
-            # Construir el payload completo para Slack usando jq.
-            # jq se encarga automáticamente de escapar los caracteres necesarios para JSON.
-            SLACK_PAYLOAD=$(jq -n \
-              --arg text "$SLACK_TEXT_EXITO" \
-              --arg markdown_text "$BLOCK_MRKDWN_CONTENT" \
-              '{
-                "text": $text,
-                "blocks": [
-                  {
-                    "type": "section",
-                    "text": {
-                      "type": "mrkdwn",
-                      "text": $markdown_text
-                    }
-                  }
-                ]
-              }')
-          else
-            # Payload para Slack en caso de que no se encuentre el reporte de Lighthouse
-            SLACK_PAYLOAD=$(jq -n \
-              --arg text "$SLACK_TEXT_FALLO" \
-              '{
-                "text": $text,
-                "blocks": [
-                  {
-                    "type": "section",
-                    "text": {
-                      "type": "mrkdwn",
-                      "text": $text
-                    }
-                  }
-                ]
-              }')
-          fi
-
-          # Establecer la salida del payload de Slack. El uso de "EOF" permite pasar cadenas multilínea.
-          echo "SLACK_PAYLOAD<<EOF" >> "$GITHUB_OUTPUT"
-          echo "$SLACK_PAYLOAD" >> "$GITHUB_OUTPUT"
-          echo "EOF" >> "$GITHUB_OUTPUT"
-        shell: bash # Especificamos 'bash' para un comportamiento consistente en el script
-
-      - name: Notificar resultados de Lighthouse en Slack
-        uses: slackapi/slack-github-action@v1
-        with:
-          # Usamos la salida 'SLACK_PAYLOAD' del paso anterior
-          payload: ${{ steps.prepare_slack_payload.outputs.SLACK_PAYLOAD }}
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-
-  update-taiga:
-    needs: lighthouse
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Update Taiga User Story
-        id: taiga
-        uses: lauacosta/backlogr-action@v0.0.2
-        continue-on-error: true
-        with:
-          taiga-username: ${{ secrets.TAIGA_USERNAME }}
-          taiga-password: ${{ secrets.TAIGA_PASSWORD }}
-          project-name: ${{ secrets.PROJECT_NAME }}
-
-      - name: Report Status
-        run: |
-          if [ "${{ steps.taiga.outputs.success }}" == "true" ]; then
-            echo "✅ User Story #${{ steps.taiga.outputs.user-story-id }} → ${{ steps.taiga.outputs.action-taken }}"
-          else
-            echo "❌ User Story update failed - check commit format and Taiga connection"
-            exit 1 # Use exit 1 to explicitly fail the step if Taiga update fails
-          fi
-      #NOTIFICACIONES_TAIGA
-      - name: Always notify team
-        if: always()
-        uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          text: |
-            📧Taiga update ${{ job.status }} for commit: ${{ github.event.head_commit.message }}
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-
-          
