@@ -125,12 +125,6 @@ jobs:
                     "text": " "
                   }
                 }
-              ],
-              "attachments": [
-                {
-                  "color": "#ff0000",
-                  "text": "Posibles causas:\n- Error en `npm run build`\n- Problema con GitHub Pages\n- Variables de entorno faltantes"
-                }
               ]
             }
         env:
@@ -151,6 +145,10 @@ jobs:
         # continue-on-error: true permite que los siguientes pasos se ejecuten incluso si la auditoría tiene fallos
         run: lhci collect --url=https://danielbenjaminlopez.github.io/taller-CI-CD/ --output-path=.lighthouseci/
         continue-on-error: true # Mantenerlo para no detener el workflow completamente si la auditoría falla
+
+      - name: Listar contenido de .lighthouseci/ para diagnóstico
+        run: ls -la ./.lighthouseci/
+        continue-on-error: true # Permite que este paso falle sin detener el workflow si la carpeta no existe
 
       - name: Verificar existencia de reportes Lighthouse
         id: check_lighthouse_dir
@@ -293,3 +291,5 @@ jobs:
             📧Taiga update ${{ job.status }} for commit: ${{ github.event.head_commit.message }}
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+          
