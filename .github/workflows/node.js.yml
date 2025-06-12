@@ -182,8 +182,8 @@ jobs:
 
             # Contenido del campo 'text' para el mensaje de notificación principal
             # Ahora incluirá las puntuaciones resumidas
-            SLACK_TEXT_EXITO="*📊 Auditoría Lighthouse Completada para ${{ github.repository }} \n*"
-            SLACK_TEXT_EXITO+="\n *Rendimiento*: \`${PERF_SCORE_FORMATTED}\` | "
+            SLACK_TEXT_EXITO="*📊 Auditoría Lighthouse Completada para ${{ github.repository }}* \n "
+            SLACK_TEXT_EXITO+="* Rendimiento*: \`${PERF_SCORE_FORMATTED}\` | "
             SLACK_TEXT_EXITO+="*Accesibilidad*: \`${ACC_SCORE_FORMATTED}\` | "
             SLACK_TEXT_EXITO+="*Mejores Prácticas*: \`${BP_SCORE_FORMATTED}\` | "
             SLACK_TEXT_EXITO+="*SEO*: \`${SEO_SCORE_FORMATTED}\`"
