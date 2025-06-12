@@ -150,9 +150,22 @@ jobs:
         # Esta acción ejecuta Lighthouse y guarda los reportes en una carpeta .lighthouseci/
         # continue-on-error: true permite que los siguientes pasos se ejecuten incluso si la auditoría tiene fallos
         run: lhci collect --url=https://danielbenjaminlopez.github.io/taller-CI-CD/ --output-path=.lighthouseci/
-        continue-on-error: true
+        continue-on-error: true # Mantenerlo para no detener el workflow completamente si la auditoría falla
+
+      - name: Verificar existencia de reportes Lighthouse
+        id: check_lighthouse_dir
+        run: |
+          # Verifica si la carpeta .lighthouseci existe y si contiene archivos
+          if [ -d "./.lighthouseci" ] && [ "$(ls -A ./.lighthouseci)" ]; then
+            echo "found_reports=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "found_reports=false" >> "$GITHUB_OUTPUT"
+          fi
+        shell: bash
 
       - name: Subir artefactos de Lighthouse (opcional, para revisar los reportes en GitHub Actions)
+        # Este paso solo se ejecutará si se encontraron reportes en la carpeta .lighthouseci/
+        if: steps.check_lighthouse_dir.outputs.found_reports == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: lighthouse-results
