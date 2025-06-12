@@ -168,13 +168,13 @@ jobs:
           echo "Debugging: Raw Lighthouse Summary: $SUMMARY" # Muestra el JSON de resumen en los logs
 
           # Extrae las puntuaciones individuales del JSON de resumen
-          # Multiplica por 100 y redondea para obtener un porcentaje entero.
-          # Utiliza // 0 para que si una puntuación no existe o es nula, se use 0 en su lugar.
-          PERF_SCORE=$(echo "$SUMMARY" | jq -r '(.performance // 0) * 100 | round')
-          ACC_SCORE=$(echo "$SUMMARY" | jq -r '(.accessibility // 0) * 100 | round')
-          BP_SCORE=$(echo "$SUMMARY" | jq -r '(.["best-practices"] // 0) * 100 | round')
-          SEO_SCORE=$(echo "$SUMMARY" | jq -r '(.seo // 0) * 100 | round')
-          PWA_SCORE=$(echo "$SUMMARY" | jq -r '(.pwa // 0) * 100 | round')
+          # Utilizamos 'tonumber? // 0' para forzar la conversión a número y manejar nulos,
+          # luego multiplicamos por 100 y redondeamos.
+          PERF_SCORE=$(echo "$SUMMARY" | jq -r '.performance | tonumber? // 0 | .* 100 | round')
+          ACC_SCORE=$(echo "$SUMMARY" | jq -r '.accessibility | tonumber? // 0 | .* 100 | round')
+          BP_SCORE=$(echo "$SUMMARY" | jq -r '.["best-practices"] | tonumber? // 0 | .* 100 | round')
+          SEO_SCORE=$(echo "$SUMMARY" | jq -r '.seo | tonumber? // 0 | .* 100 | round')
+          PWA_SCORE=$(echo "$SUMMARY" | jq -r '.pwa | tonumber? // 0 | .* 100 | round')
 
           echo "Debugging: Performance Score: $PERF_SCORE" # Muestra las puntuaciones extraídas en los logs
           echo "Debugging: Accessibility Score: $ACC_SCORE"
