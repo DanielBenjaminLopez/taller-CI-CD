@@ -137,17 +137,108 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   lighthouse:
-    needs: deploy
+    needs: deploy # Asegura que Lighthouse se ejecute después del despliegue
     runs-on: ubuntu-latest
     steps:
-      - name: Ejecutar Auditoría Lighthouse y Notificar a Slack
-        uses: foo-software/lighthouse-check-action@v1
-        id: lighthouse_check
+      - uses: actions/checkout@v4 # Necesario para acceder a los archivos del repositorio si fuera necesario
+
+      - name: Instalar Lighthouse CI y jq
+        run: |
+          npm install -g @lhci/cli # Instala la herramienta de línea de comandos de Lighthouse CI
+          sudo apt-get update && sudo apt-get install -y jq # Instala 'jq' para parsear el JSON del reporte
+
+      - name: Ejecutar Auditoría Lighthouse
+        # Esta acción ejecuta Lighthouse y guarda los reportes en una carpeta .lighthouseci/
+        # continue-on-error: true permite que los siguientes pasos se ejecuten incluso si la auditoría tiene fallos
+        run: lhci collect --url=https://danielbenjaminlopez.github.io/taller-CI-CD/ --output-path=.lighthouseci/
+        continue-on-error: true
+
+      - name: Subir artefactos de Lighthouse (opcional, para revisar los reportes en GitHub Actions)
+        uses: actions/upload-artifact@v4
         with:
-          # La URL de tu sitio desplegado
-          urls: "https://danielbenjaminlopez.github.io/taller-CI-CD/"
+          name: lighthouse-results
+          path: ./.lighthouseci/
+
+      - name: Obtener resultados de Lighthouse y preparar payload de Slack
+        id: prepare_slack_payload # Le damos un ID a este paso para poder referenciar sus salidas
+        run: |
+          # Buscar la ruta del último reporte JSON generado por Lighthouse
+          LIGHTHOUSE_REPORT_PATH=$(find ./.lighthouseci -name "*.json" | head -n 1)
+
+          # Inicializar variables por defecto para el caso de que no se encuentre el reporte
+          SLACK_TEXT_FALLO="⚠️ *Auditoría Lighthouse Fallida* para ${{ github.repository }}. No se pudo generar el reporte."
+
+          if [ -f "$LIGHTHOUSE_REPORT_PATH" ]; then
+            # Parsear el reporte JSON para obtener las puntuaciones de las categorías
+            PERF_SCORE=$(jq '."categories"."performance"."score"' "$LIGHTHOUSE_REPORT_PATH")
+            ACC_SCORE=$(jq '."categories"."accessibility"."score"' "$LIGHTHOUSE_REPORT_PATH")
+            BP_SCORE=$(jq '."categories"."best-practices"."score"' "$LIGHTHOUSE_REPORT_PATH")
+            SEO_SCORE=$(jq '."categories"."seo"."score"' "$LIGHTHOUSE_REPORT_PATH")
+
+            # Convertir las puntuaciones de 0-1 a 0-100 y formatear a entero sin decimales
+            PERF_SCORE_FORMATTED=$(awk "BEGIN {printf \"%.0f\", $PERF_SCORE * 100}")
+            ACC_SCORE_FORMATTED=$(awk "BEGIN {printf \"%.0f\", $ACC_SCORE * 100}")
+            BP_SCORE_FORMATTED=$(awk "BEGIN {printf \"%.0f\", $BP_SCORE * 100}")
+            SEO_SCORE_FORMATTED=$(awk "BEGIN {printf \"%.0f\", $SEO_SCORE * 100}")
+
+            SLACK_TEXT_EXITO="*📊 Auditoría Lighthouse Completada para ${{ github.repository }}*"
+            
+            # Contenido del campo 'text' dentro del bloque mrkdwn para el mensaje detallado
+            BLOCK_MRKDWN_CONTENT="*URL Auditada*: <https://danielbenjaminlopez.github.io/taller-CI-CD/|https://danielbenjaminlopez.github.io/taller-CI-CD/>\n"
+            BLOCK_MRKDWN_CONTENT+="*Rendimiento*: \`${PERF_SCORE_FORMATTED}\`\n"
+            BLOCK_MRKDWN_CONTENT+="*Accesibilidad*: \`${ACC_SCORE_FORMATTED}\`\n"
+            BLOCK_MRKDWN_CONTENT+="*Mejores Prácticas*: \`${BP_SCORE_FORMATTED}\`\n"
+            BLOCK_MRKDWN_CONTENT+="*SEO*: \`${SEO_SCORE_FORMATTED}\`\n"
+            BLOCK_MRKDWN_CONTENT+="*Ver Logs de la Acción*: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|Ver detalles>"
+
+            # Construir el payload completo para Slack usando jq.
+            # jq se encarga automáticamente de escapar los caracteres necesarios para JSON.
+            SLACK_PAYLOAD=$(jq -n \
+              --arg text "$SLACK_TEXT_EXITO" \
+              --arg markdown_text "$BLOCK_MRKDWN_CONTENT" \
+              '{
+                "text": $text,
+                "blocks": [
+                  {
+                    "type": "section",
+                    "text": {
+                      "type": "mrkdwn",
+                      "text": $markdown_text
+                    }
+                  }
+                ]
+              }')
+          else
+            # Payload para Slack en caso de que no se encuentre el reporte de Lighthouse
+            SLACK_PAYLOAD=$(jq -n \
+              --arg text "$SLACK_TEXT_FALLO" \
+              '{
+                "text": $text,
+                "blocks": [
+                  {
+                    "type": "section",
+                    "text": {
+                      "type": "mrkdwn",
+                      "text": $text
+                    }
+                  }
+                ]
+              }')
+          fi
+
+          # Establecer la salida del payload de Slack. El uso de "EOF" permite pasar cadenas multilínea.
+          echo "SLACK_PAYLOAD<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$SLACK_PAYLOAD" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+        shell: bash # Especificamos 'bash' para un comportamiento consistente en el script
+
+      - name: Notificar resultados de Lighthouse en Slack
+        uses: slackapi/slack-github-action@v1
+        with:
+          # Usamos la salida 'SLACK_PAYLOAD' del paso anterior
+          payload: ${{ steps.prepare_slack_payload.outputs.SLACK_PAYLOAD }}
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # Usa tu Webhook URL existente
 
   update-taiga:
     needs: lighthouse # Asegura que Taiga se actualice después de los tests y Lighthouse
