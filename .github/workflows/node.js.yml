@@ -181,9 +181,15 @@ jobs:
             BP_SCORE_FORMATTED=$(awk "BEGIN {printf \"%.0f\", $BP_SCORE * 100}")
             SEO_SCORE_FORMATTED=$(awk "BEGIN {printf \"%.0f\", $SEO_SCORE * 100}")
 
-            SLACK_TEXT_EXITO="*📊 Auditoría Lighthouse Completada para ${{ github.repository }}*"
-            
-            # Contenido del campo 'text' dentro del bloque mrkdwn para el mensaje detallado
+            # Contenido del campo 'text' para el mensaje de notificación principal
+            # Ahora incluirá las puntuaciones resumidas
+            SLACK_TEXT_EXITO="*📊 Auditoría Lighthouse Completada para ${{ github.repository }}*\n"
+            SLACK_TEXT_EXITO+="*Rendimiento*: \`${PERF_SCORE_FORMATTED}\` | "
+            SLACK_TEXT_EXITO+="*Accesibilidad*: \`${ACC_SCORE_FORMATTED}\` | "
+            SLACK_TEXT_EXITO+="*Mejores Prácticas*: \`${BP_SCORE_FORMATTED}\` | "
+            SLACK_TEXT_EXITO+="*SEO*: \`${SEO_SCORE_FORMATTED}\`"
+
+            # Contenido del campo 'text' dentro del bloque mrkdwn para el mensaje detallado (esto ya estaba bien)
             BLOCK_MRKDWN_CONTENT="*URL Auditada*: <https://danielbenjaminlopez.github.io/taller-CI-CD/|https://danielbenjaminlopez.github.io/taller-CI-CD/>\n"
             BLOCK_MRKDWN_CONTENT+="*Rendimiento*: \`${PERF_SCORE_FORMATTED}\`\n"
             BLOCK_MRKDWN_CONTENT+="*Accesibilidad*: \`${ACC_SCORE_FORMATTED}\`\n"
